@@ -563,16 +563,17 @@ function closeMovieDetail(){
 }
 
 function playMovie(){
-  const video = document.querySelector("#movie-detail video");
 
-  if(video){
-    video.scrollIntoView({
+  const player =
+    document.querySelector("#movie-detail iframe");
+
+  if(player){
+    player.scrollIntoView({
       behavior: "smooth",
       block: "center"
     });
-
-    video.play();
   }
+
 }
 
 function watchMovie(title){

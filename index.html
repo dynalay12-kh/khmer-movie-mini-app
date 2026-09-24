@@ -199,7 +199,15 @@ body{
   padding:7px;
   z-index:20;
 }
+.bottom{
+  position:fixed;
+  ...
+  z-index:20;
+}
 
+body.detail-open .bottom{
+  display:none;
+}
 .nav{
   border:0;
   background:transparent;
@@ -575,7 +583,7 @@ function openMovieDetail(title, rating, type){
     </div>
   `;
 
-  document.body.appendChild(detail);
+  document.body.classList.add("detail-open");
 
 }
 
@@ -584,8 +592,9 @@ function closeMovieDetail(){
   const detail =
     document.getElementById("movie-detail");
 
-  if(detail){
-    detail.remove();
+ if(detail){
+  detail.remove();
+  document.body.classList.remove("detail-open");
   }
 
 }

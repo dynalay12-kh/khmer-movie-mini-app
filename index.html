@@ -315,7 +315,24 @@ body{
 }
 
 }
+.detail-box{
+  position:relative;
+}
 
+.close-detail{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:10;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:#222;
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -499,7 +516,7 @@ function openMovieDetail(title, rating, type){
 
   detail.id = "movie-detail";
   detail.innerHTML = `
-  <div class="detail-box">
+  <button class="close-detail" onclick="closeMovieDetail()">✕</button>
 
   <iframe
     src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"

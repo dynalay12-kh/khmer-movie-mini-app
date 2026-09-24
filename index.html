@@ -320,6 +320,7 @@ body{
 }
 
 .close-detail{
+  position:static !important;
   display:block;
   width:calc(100% - 24px);
   margin:12px auto 16px;
@@ -516,18 +517,17 @@ function openMovieDetail(title, rating, type){
 
   detail.id = "movie-detail";
   detail.innerHTML = `
-  <button class="close-detail" onclick="closeMovieDetail()">
+<iframe
+  src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
+  loading="lazy"
+  style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
+  allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+  allowfullscreen>
+</iframe>
+
+<button class="close-detail" onclick="closeMovieDetail()">
   ✕ បិទរឿង
 </button>
-
-  <iframe
-    src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
-    loading="lazy"
-    style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
-    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-    allowfullscreen>
-  </iframe>
-
   <div class="detail-content">
   
         <div class="detail-label">

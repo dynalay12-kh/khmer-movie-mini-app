@@ -491,9 +491,12 @@ function openMovieDetail(title, rating, type){
   return;
 
   const oldDetail =
-    document.getElementById("movie-detail");
-    document.createElement("div");
+  document.getElementById("movie-detail");
 
+const detail =
+  document.createElement("div");
+
+detail.id = "movie-detail";
   detail.id = "movie-detail";
 
   detail.innerHTML = `
@@ -581,3 +584,7 @@ function watchMovie(title){
   );
 
 }
+</script>
+
+</body>
+</html>

@@ -608,7 +608,11 @@ function openMovieDetail(title, rating, type){
     </div>
   `;
   document.body.appendChild(detail);
-  document.body.classList.add("detail-open");
+document.body.classList.add("detail-open");
+
+const bottom = document.querySelector(".bottom");
+if(bottom){
+  bottom.style.display = "none";
 }
 
 function closeMovieDetail(){
@@ -619,6 +623,10 @@ function closeMovieDetail(){
  if(detail){
   detail.remove();
   document.body.classList.remove("detail-open");
+
+  const bottom = document.querySelector(".bottom");
+  if(bottom){
+    bottom.style.display = "grid";
   }
 
 }

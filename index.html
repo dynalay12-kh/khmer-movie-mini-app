@@ -372,16 +372,21 @@ body{
     </div>
 
     <div id="movies" class="movies">
-<div class="card" data-title="កំពូលថាមពលចម្លែក">
+<div class="card" data-title="កំពូលថាមពលចម្លែក"
+     onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
+
   <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
+
   <div class="info">
     <div class="title">កំពូលថាមពលចម្លែក</div>
     <div class="rating">⭐ 9.1</div>
     <div class="type">Action • Historical</div>
   </div>
+
 </div>
 
-<div class="card" data-title="ដោះបណ្ដាសាស៊យ">
+<div class="card" data-title="ដោះបណ្ដាសាស៊យ"
+     onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')">
   <img class="movie-poster" src="IMG_3834.PNG" alt="ដោះបណ្ដាសាស៊យ">
   <div class="info">
     <div class="title">ដោះបណ្ដាសាស៊យ</div>
@@ -390,7 +395,8 @@ body{
   </div>
 </div>
 
-<div class="card" data-title="ស្នេហាជ្រៅដូចសមុទ្រ">
+<div class="card" data-title="ស្នេហាជ្រៅដូចសមុទ្រ"
+     onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')">
   <img class="movie-poster" src="IMG_3834.PNG" alt="ស្នេហាជ្រៅដូចសមុទ្រ">
   <div class="info">
     <div class="title">ស្នេហាជ្រៅដូចសមុទ្រ</div>
@@ -460,12 +466,18 @@ search.addEventListener("input", function(){
 
 function openMovie(){
 
+}
+
+function openMovieDetail(title, rating, type){
+
   alert(
-    "ទំព័រព័ត៌មានរឿង នឹងភ្ជាប់នៅជំហានបន្ទាប់ 🎬"
+    "🎬 " + title +
+    "\n⭐ Rating: " + rating +
+    "\n🎭 " + type +
+    "\n\nទំព័រព័ត៌មានរឿងកំពុងរៀបចំ..."
   );
 
 }
-
 </script>
 
 </body>

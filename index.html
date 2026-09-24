@@ -559,14 +559,15 @@ function openMovieDetail(title, rating, type){
 
       <div class="detail-video">
 
-        <iframe
+        <video
           id="movie-player"
-          src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
-          loading="lazy"
-          style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
-          allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-          allowfullscreen>
-        </iframe>
+          controls
+          playsinline
+          webkit-playsinline
+          preload="metadata"
+          poster="IMG_3834.PNG"
+          style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;object-fit:contain;">
+        </video>
 
       </div>
 
@@ -671,26 +672,44 @@ function playEpisode(ep){
   }
 
   const episodes = {
-    1: "https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3",
+    1: "https://vz-3a132f7d-c60.b-cdn.net/a203a185-73bd-4df6-ab94-231a93731de3/playlist.m3u8",
     2: "",
     3: "",
     4: ""
   };
 
-  if(!episodes[ep]){
+  const url = episodes[ep];
+
+  if(!url){
     alert("EP " + ep + " មិនទាន់មានវីដេអូទេ");
     return;
   }
 
-  player.src = episodes[ep];
+  if(window.hlsPlayer){
+    window.hlsPlayer.destroy();
+    window.hlsPlayer = null;
+  }
+
+  if(player.canPlayType("application/vnd.apple.mpegurl")){
+    player.src = url;
+  }else if(window.Hls && Hls.isSupported()){
+    window.hlsPlayer = new Hls();
+    window.hlsPlayer.loadSource(url);
+    window.hlsPlayer.attachMedia(player);
+  }else{
+    alert("Browser នេះមិនអាចចាក់វីដេអូនេះបានទេ");
+    return;
+  }
 
   player.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
 
+  player.play().catch(function(){});
 }
 
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </script>
 </body>
 </html>

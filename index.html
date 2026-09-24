@@ -500,21 +500,17 @@ function openMovieDetail(title, rating, type){
   detail.id = "movie-detail";
 
   detail.innerHTML = `
-    <div class="detail-box">
+  <div class="detail-box">
 
-      <button
-        class="detail-close"
-        onclick="closeMovieDetail()">
-        ✕
-      </button>
+    <video
+      controls
+      playsinline
+      poster="IMG_3834.PNG"
+      style="width:100%;border-radius:16px;display:block;background:#000;">
+      <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
+    </video>
 
-      <img
-  src="IMG_3834.PNG"
-  class="detail-poster"
-  alt="${title}"
-style="width:120px !important;height:180px !important;max-width:120px !important;max-height:180px !important;object-fit:cover;display:block;margin:10px auto 18px;border-radius:14px;"      >
-
-      <div class="detail-content">
+    <div class="detail-content">
 
         <div class="detail-label">
           🔥 កំពុងពេញនិយម
@@ -537,7 +533,7 @@ style="width:120px !important;height:180px !important;max-width:120px !important
 
         <button
           class="watch-button"
-          onclick="watchMovie('${title}')">
+          onclick="playMovie()"
           ▶️ មើលរឿង
         </button>
 
@@ -566,16 +562,19 @@ function closeMovieDetail(){
   }
 
 }
+}
+
+function playMovie(){
+  const video = document.querySelector("#movie-detail video");
+
+  if(video){
+    video.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    video.play();
+  }
+}
 
 function watchMovie(title){
-
-  window.open(
-    "https://t.me/Khm​​ermoviehdbot",
-    "_blank"
-  );
-
-}
-</script>
-
-</body>
-</html>

@@ -466,15 +466,101 @@ search.addEventListener("input", function(){
 
 function openMovie(){
 
+  openMovieDetail(
+    "រឿងថ្មីប្រចាំសប្តាហ៍",
+    "9.1",
+    "Action • Historical"
+  );
+
 }
 
 function openMovieDetail(title, rating, type){
 
+  const oldDetail =
+    document.getElementById("movie-detail");
+
+  if(oldDetail){
+    oldDetail.remove();
+  }
+
+  const detail =
+    document.createElement("div");
+
+  detail.id = "movie-detail";
+
+  detail.innerHTML = `
+    <div class="detail-box">
+
+      <button
+        class="detail-close"
+        onclick="closeMovieDetail()">
+        ✕
+      </button>
+
+      <img
+        src="IMG_3834.PNG"
+        class="detail-poster"
+        alt="${title}"
+      >
+
+      <div class="detail-content">
+
+        <div class="detail-label">
+          🔥 កំពុងពេញនិយម
+        </div>
+
+        <h1>${title}</h1>
+
+        <div class="detail-rating">
+          ⭐ ${rating}
+        </div>
+
+        <div class="detail-type">
+          🎭 ${type}
+        </div>
+
+        <p class="detail-description">
+          រឿងថ្មីៗ និងរឿងពេញនិយម
+          ពី KHMER MOVIE HD។
+        </p>
+
+        <button
+          class="watch-button"
+          onclick="watchMovie('${title}')">
+          ▶️ មើលរឿង
+        </button>
+
+        <button
+          class="channel-button"
+          onclick="closeMovieDetail()">
+          📢 ចូល Channel
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(detail);
+
+}
+
+function closeMovieDetail(){
+
+  const detail =
+    document.getElementById("movie-detail");
+
+  if(detail){
+    detail.remove();
+  }
+
+}
+
+function watchMovie(title){
+
   alert(
     "🎬 " + title +
-    "\n⭐ Rating: " + rating +
-    "\n🎭 " + type +
-    "\n\nទំព័រព័ត៌មានរឿងកំពុងរៀបចំ..."
+    "\n\nមុខងារ មើលរឿង នឹងភ្ជាប់នៅជំហានបន្ទាប់។"
   );
 
 }

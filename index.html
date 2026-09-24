@@ -320,22 +320,18 @@ body{
 }
 
 .close-detail{
-  position:absolute;
-  top:8px;
-  right:8px;
-  z-index:99999;
-  width:42px;
-  height:42px;
-  border:2px solid #fff;
-  border-radius:50%;
+  display:block;
+  width:calc(100% - 24px);
+  margin:12px auto 16px;
+  padding:12px;
+  border:0;
+  border-radius:12px;
   background:#ff7200;
   color:#fff;
-  font-size:24px;
-  font-weight:bold;
+  font-size:16px;
+  font-weight:700;
+  text-align:center;
   cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 </style>
 </head>
@@ -520,7 +516,9 @@ function openMovieDetail(title, rating, type){
 
   detail.id = "movie-detail";
   detail.innerHTML = `
-  <button class="close-detail" onclick="closeMovieDetail()">✕</button>
+  <button class="close-detail" onclick="closeMovieDetail()">
+  ✕ បិទរឿង
+</button>
 
   <iframe
     src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"

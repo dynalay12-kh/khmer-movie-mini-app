@@ -384,7 +384,7 @@ body{
 
     <div id="movies" class="movies">
 <div class="card" data-title="កំពូលថាមពលចម្លែក"
-     onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
+     onclick="alert('CARD OK')">
 
   <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
 
@@ -532,10 +532,10 @@ function openMovieDetail(title, rating, type){
         </p>
 
         <button
-          class="watch-button"
-          onclick="playMovie()"
-          ▶️ មើលរឿង
-        </button>
+  class="watch-button"
+  onclick="playMovie()">
+  ▶️ មើលរឿង
+</button>
 
         <button
   class="channel-button"
@@ -577,3 +577,10 @@ function playMovie(){
 }
 
 function watchMovie(title){
+
+  window.open(
+    "https://t.me/khmermoviehdbot",
+    "_blank"
+  );
+
+}

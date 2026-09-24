@@ -524,7 +524,9 @@ function openMovieDetail(title, rating, type){
   allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
   allowfullscreen>
 </iframe>
-<button class="close-detail" onclick="closeMovieDetail()">
+<button
+  onclick="closeMovieDetail()"
+  style="display:block;width:calc(100% - 24px);margin:12px auto 16px;padding:12px;border:0;border-radius:12px;background:#ff7200;color:#fff;font-size:16px;font-weight:700;text-align:center;cursor:pointer;">
   ✕ បិទរឿង
 </button>
   <div class="detail-content">

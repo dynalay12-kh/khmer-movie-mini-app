@@ -199,6 +199,7 @@ body{
   padding:7px;
   z-index:20;
 }
+
 .nav{
   border:0;
   background:transparent;
@@ -445,24 +446,15 @@ body.detail-open .bottom{
   <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
 
   <div class="info">
-  <div class="title">កំពូលថាមពលចម្លែក</div>
-  <div class="rating">⭐ 9.1</div>
-  <div class="type">Action • Historical</div>
-
-  <button
-    type="button"
-    onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')"
-    style="width:100%;margin-top:10px;padding:11px;border:0;border-radius:10px;background:#ff7200;color:#fff;font-weight:700;font-size:14px;">
-    ▶️ មើលរឿង
-  </button>
+    <div class="title">កំពូលថាមពលចម្លែក</div>
+    <div class="rating">⭐ 9.1</div>
+    <div class="type">Action • Historical</div>
+  </div>
 
 </div>
 
 <div class="card" data-title="ដោះបណ្ដាសាស៊យ"
-     onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')"
-     role="button"
-     tabindex="0"
-     style="cursor:pointer;">
+     onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')">
   <img class="movie-poster" src="IMG_3834.PNG" alt="ដោះបណ្ដាសាស៊យ">
   <div class="info">
     <div class="title">ដោះបណ្ដាសាស៊យ</div>
@@ -472,10 +464,7 @@ body.detail-open .bottom{
 </div>
 
 <div class="card" data-title="ស្នេហាជ្រៅដូចសមុទ្រ"
-     onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')"
-     role="button"
-     tabindex="0"
-     style="cursor:pointer;">
+     onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')">
   <img class="movie-poster" src="IMG_3834.PNG" alt="ស្នេហាជ្រៅដូចសមុទ្រ">
   <div class="info">
     <div class="title">ស្នេហាជ្រៅដូចសមុទ្រ</div>
@@ -701,6 +690,7 @@ function playEpisode(ep){
   });
 
 }
+
 </script>
 </body>
 </html>

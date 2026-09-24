@@ -2,34 +2,48 @@
 <html lang="km">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>KHMER MOVIE HD</title>
 
-  <!-- Telegram Web App SDK -->
+  <!-- Google Font Khmer -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Telegram Web App SDK & HLS.js -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- HLS.js សម្រាប់ Stream វីដេអូ m3u8 -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
   <style>
+    :root {
+      --primary: #ff5e00;
+      --primary-glow: rgba(255, 94, 0, 0.35);
+      --bg: #070709;
+      --card-bg: rgba(23, 23, 28, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-muted: #8e8e93;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Kantumruy Pro', -apple-system, sans-serif;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #090909;
-      color: #fff;
+      background-color: var(--bg);
+      color: #ffffff;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      overflow-x: hidden;
     }
 
     .app {
-      max-width: 650px;
-      margin: auto;
+      max-width: 550px;
+      margin: 0 auto;
       min-height: 100vh;
-      padding-bottom: 90px;
+      padding-bottom: 95px;
     }
 
     /* Header */
@@ -37,408 +51,498 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 16px;
-      gap: 10px;
+      padding: 16px 18px 12px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    .logo-wrap {
+      position: relative;
     }
 
     .logo-small {
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       object-fit: cover;
-      border-radius: 12px;
-      background: #222;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
 
     .header-title {
       font-size: 17px;
-      font-weight: 800;
-      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0.3px;
     }
 
     .header-title span {
-      color: #ff7200;
+      background: linear-gradient(90deg, #ff7b00, #ff4500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .header-subtitle {
-      color: #777;
+      color: var(--text-muted);
       font-size: 11px;
-      margin-top: 2px;
+      font-weight: 400;
+      margin-top: 1px;
     }
 
-    .user-badge {
-      background: #191919;
-      border: 1px solid #333;
+    .balance-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
       border-radius: 20px;
       padding: 6px 12px;
       font-size: 13px;
       font-weight: 600;
-      color: #ffb000;
+      color: #ffc837;
     }
 
-    /* Search */
-    .search {
-      margin: 4px 16px 16px;
+    /* Search Box */
+    .search-wrap {
+      padding: 0 18px 16px;
     }
 
-    .search input {
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 11px 16px;
+      gap: 10px;
+      transition: all 0.3s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--primary-glow);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-box input {
       width: 100%;
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      color: #fff;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 15px;
+      background: transparent;
+      border: none;
       outline: none;
+      color: #fff;
+      font-size: 14px;
     }
 
-    .search input:focus {
-      border-color: #ff7200;
+    .search-box input::placeholder {
+      color: #666;
     }
 
     /* Hero Banner */
     .hero {
-      margin: 0 16px 20px;
-      padding: 20px 18px;
+      position: relative;
+      margin: 0 18px 22px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 94, 0, 0.15) 0%, rgba(10, 10, 12, 0.95) 100%), #141419;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .hero-content {
+      padding: 24px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 94, 0, 0.2);
+      border: 1px solid rgba(255, 94, 0, 0.4);
+      color: #ff914d;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
       border-radius: 20px;
-      background: linear-gradient(135deg, #29170b, #150f0b);
-      border: 1px solid #38261b;
     }
 
-    .hero small {
-      color: #ff7200;
+    .hero-title {
+      font-size: 22px;
       font-weight: 700;
+      margin-top: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .hero-meta {
+      color: var(--text-muted);
       font-size: 12px;
+      margin: 6px 0 16px;
     }
 
-    .hero h1 {
-      margin-top: 6px;
-      font-size: 20px;
-    }
-
-    .hero p {
-      color: #aaa;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    .hero button {
-      margin-top: 14px;
-      border: 0;
-      background: #ff7200;
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #ff7300, #ff3c00);
       color: #fff;
-      padding: 10px 18px;
+      border: none;
+      padding: 10px 22px;
       border-radius: 12px;
-      font-weight: 700;
       font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 4px 15px var(--primary-glow);
     }
 
-    /* Categories */
+    /* Category Filter */
     .categories {
       display: flex;
-      gap: 8px;
+      gap: 10px;
+      padding: 0 18px 18px;
       overflow-x: auto;
-      padding: 0 16px 16px;
       scrollbar-width: none;
     }
     .categories::-webkit-scrollbar { display: none; }
 
-    .category {
+    .cat-pill {
       flex: none;
-      background: #161616;
-      border: 1px solid #282828;
-      color: #aaa;
-      padding: 7px 14px;
-      border-radius: 18px;
-      font-size: 13px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #a0a0a5;
+      padding: 7px 15px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .category.active {
-      background: #ff7200;
+    .cat-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
       color: #fff;
-      border-color: #ff7200;
+      box-shadow: 0 3px 12px var(--primary-glow);
     }
 
-    /* Movie Grid */
-    .section {
-      padding: 0 16px;
-    }
-
-    .section-title {
+    /* Section Title */
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      padding: 0 18px 12px;
     }
 
-    .section-title h2 {
-      font-size: 17px;
+    .section-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .movies-grid {
+    .see-all {
+      color: #ff8533;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    /* Movie Grid */
+    .movie-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 12px;
+      padding: 0 18px;
     }
 
     .movie-card {
-      background: #141414;
-      border: 1px solid #242424;
-      border-radius: 12px;
+      position: relative;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       overflow: hidden;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
+      transition: transform 0.2s;
     }
 
     .movie-card:active {
-      transform: scale(0.98);
+      transform: scale(0.96);
     }
 
-    .movie-poster {
+    .poster-wrap {
+      position: relative;
       width: 100%;
       aspect-ratio: 2/3;
+      overflow: hidden;
+      background: #1a1a22;
+    }
+
+    .poster-img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      background: #202020;
+    }
+
+    .hd-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 5px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .rating-badge {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      color: #ffc837;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 6px;
     }
 
     .movie-info {
       padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
     }
 
     .movie-title {
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.25;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .movie-rating {
-      color: #ffb000;
-      font-size: 11px;
     }
 
     .movie-type {
-      color: #777;
       font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .empty-state {
-      display: none;
-      text-align: center;
-      color: #777;
-      padding: 40px 0;
-      font-size: 14px;
-    }
-
-    /* Detail Modal */
+    /* Modal Player */
     #movie-detail {
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 9999;
-      background: #090909;
+      z-index: 99999;
+      background: #000;
       overflow-y: auto;
-      padding-bottom: 40px;
     }
 
-    .detail-container {
-      max-width: 650px;
-      margin: 0 auto;
-    }
-
-    .video-wrapper {
+    .video-container {
       width: 100%;
       aspect-ratio: 16/9;
       background: #000;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
     }
 
-    .video-wrapper video {
+    .video-container video {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
 
-    .detail-body {
-      padding: 16px;
+    .modal-body {
+      padding: 16px 18px 40px;
     }
 
-    .close-btn {
+    .modal-close-btn {
       width: 100%;
-      padding: 11px;
-      border: 0;
-      border-radius: 12px;
-      background: #222;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
       color: #fff;
-      font-weight: 700;
       font-size: 14px;
-      cursor: pointer;
+      font-weight: 600;
+      border-radius: 12px;
       margin-bottom: 14px;
+      cursor: pointer;
     }
 
-    .episode-list {
+    .episodes-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      margin: 12px 0 20px;
+      margin: 14px 0 20px;
     }
 
-    .ep-btn {
-      background: #181818;
-      border: 1px solid #2e2e2e;
+    .ep-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
       color: #fff;
       padding: 10px 0;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
     }
 
-    .ep-btn.active {
-      background: #ff7200;
-      border-color: #ff7200;
+    .ep-card.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 2px 10px var(--primary-glow);
     }
 
-    .channel-btn {
-      width: 100%;
-      padding: 12px;
-      border: 0;
-      border-radius: 12px;
-      background: #ff7200;
-      color: #fff;
-      font-weight: bold;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    /* Bottom Navigation */
+    /* Floating Bottom Nav */
     .bottom-nav {
       position: fixed;
-      bottom: 12px;
+      bottom: 14px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(600px, calc(100% - 24px));
-      background: rgba(22, 22, 22, 0.95);
-      backdrop-filter: blur(10px);
-      border: 1px solid #333;
+      width: calc(100% - 36px);
+      max-width: 500px;
+      background: rgba(18, 18, 22, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       padding: 6px;
-      z-index: 100;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
-    .nav-item {
+    .nav-btn {
       border: 0;
       background: transparent;
       color: #777;
-      padding: 8px;
+      padding: 6px 0;
       border-radius: 14px;
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 500;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
       cursor: pointer;
     }
 
-    .nav-item.active {
-      background: #ff7200;
+    .nav-btn.active {
       color: #fff;
+      background: linear-gradient(135deg, rgba(255, 94, 0, 0.9), rgba(255, 60, 0, 0.9));
+      box-shadow: 0 4px 12px var(--primary-glow);
     }
   </style>
 </head>
 
 <body>
-
   <div class="app">
     <!-- Header -->
     <header class="header">
       <div class="header-left">
-        <img src="IMG_3834.PNG" alt="Logo" class="logo-small" onerror="this.src='https://placehold.co/100x100/1e1e1e/fff?text=Movie'">
+        <div class="logo-wrap">
+          <img src="IMG_3834.PNG" alt="Logo" class="logo-small" onerror="this.src='https://placehold.co/100x100/1e1e1e/fff?text=KM'">
+        </div>
         <div>
           <div class="header-title">KHMER MOVIE <span>HD</span></div>
-          <div class="header-subtitle">រឿងភាគ & ភាពយន្តថ្មីៗ</div>
+          <div class="header-subtitle">រឿងថ្មីៗ • រឿងពេញនិយម</div>
         </div>
       </div>
-      <div class="user-badge" id="user-display">👤 សួស្តី</div>
+      <div class="balance-badge">
+        <span>💰</span> $0.00
+      </div>
     </header>
 
-    <!-- Search -->
-    <div class="search">
-      <input type="search" id="search-input" placeholder="🔎 ស្វែងរកឈ្មោះរឿង...">
+    <!-- Search Input -->
+    <div class="search-wrap">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="ស្វែងរកឈ្មោះរឿង...">
+      </div>
     </div>
 
-    <!-- Hero Banner -->
+    <!-- Hero Spotlight -->
     <div class="hero">
-      <small>🔥 រឿងពិសេសប្រចាំសប្តាហ៍</small>
-      <h1 id="hero-title">កំពូលថាមពលចម្លែក</h1>
-      <p id="hero-desc">⭐ 9.1 • Action • Historical</p>
-      <button onclick="playMovieById(1)">ទស្សនាឥឡូវនេះ →</button>
+      <div class="hero-content">
+        <div class="hero-tag">🔥 កំពុងពេញនិយម</div>
+        <h2 class="hero-title">កំពូលថាមពលចម្លែក</h2>
+        <div class="hero-meta">⭐ 9.1 • Historical • Action</div>
+        <button class="hero-btn" onclick="playMovieById(1)">
+          ទស្សនាឥឡូវនេះ ➔
+        </button>
+      </div>
     </div>
 
-    <!-- Category Tabs -->
+    <!-- Category Filter -->
     <div class="categories">
-      <button class="category active">ទាំងអស់</button>
-      <button class="category">🔥 ពេញនិយម</button>
-      <button class="category">🆕 ចេញថ្មី</button>
-      <button class="category">🎭 រឿងបុរាណ</button>
+      <button class="cat-pill active">ទាំងអស់</button>
+      <button class="cat-pill">🔥 ពេញនិយម</button>
+      <button class="cat-pill">🆕 រឿងថ្មី</button>
+      <button class="cat-pill">❤️ ចូលចិត្ត</button>
     </div>
 
-    <!-- Movie List -->
-    <section class="section">
-      <div class="section-title">
-        <h2>🎬 បញ្ជីរឿងទើបអាប់ដេត</h2>
-      </div>
-      <div class="movies-grid" id="movies-container"></div>
-      <div class="empty-state" id="empty-state">មិនមានរឿងដែលអ្នកស្វែងរកទេ 😔</div>
-    </section>
+    <!-- Section Content -->
+    <div class="section-header">
+      <h3>🎬 រឿងថ្មីៗ</h3>
+      <a href="#" class="see-all">មើលទាំងអស់ ➔</a>
+    </div>
+
+    <!-- Movies Grid -->
+    <div class="movie-grid" id="moviesContainer"></div>
   </div>
 
-  <!-- Detail & Player Modal -->
+  <!-- Video Streaming Modal -->
   <div id="movie-detail">
-    <div class="detail-container">
-      <div class="video-wrapper">
-        <video id="player" controls playsinline webkit-playsinline preload="metadata"></video>
-      </div>
+    <div class="video-container">
+      <video id="player" controls playsinline webkit-playsinline preload="metadata"></video>
+    </div>
 
-      <div class="detail-body">
-        <button class="close-btn" onclick="closePlayer()">✕ បិទផ្ទាំងវីដេអូ</button>
-        <h2 id="detail-title" style="font-size: 20px;"></h2>
-        <p id="detail-meta" style="color: #ffb000; font-size: 13px; margin: 4px 0 14px;"></p>
+    <div class="modal-body">
+      <button class="modal-close-btn" onclick="closePlayer()">✕ បិទវីដេអូ</button>
+      <h2 id="modalTitle" style="font-size: 19px; font-weight: 700;"></h2>
+      <div id="modalMeta" style="color: #ff914d; font-size: 12px; margin: 4px 0 16px;"></div>
 
-        <h3 style="font-size: 15px;">📺 ជ្រើសរើសភាគ</h3>
-        <div class="episode-list" id="episode-container"></div>
+      <div style="font-size: 14px; font-weight: 600;">📺 ជ្រើសរើសភាគ (Episodes)</div>
+      <div class="episodes-grid" id="episodesContainer"></div>
 
-        <button class="channel-btn" onclick="openChannel()">📢 ចូលរួម Telegram Channel ផ្លូវការ</button>
-      </div>
+      <button style="width: 100%; padding: 13px; border: none; border-radius: 12px; background: linear-gradient(135deg, #ff7300, #ff3c00); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer;" onclick="openChannel()">
+        📢 ចូលរួម Telegram Channel ផ្លូវការ
+      </button>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
+  <!-- Bottom Floating Navbar -->
   <nav class="bottom-nav">
-    <button class="nav-item active"><span>🏠</span>ទំព័រដើម</button>
-    <button class="nav-item"><span>❤️</span>ចូលចិត្ត</button>
-    <button class="nav-item" onclick="openChannel()"><span>📢</span>Channel</button>
+    <button class="nav-btn active">
+      <span style="font-size: 16px;">🏠</span>
+      <span>ទំព័រដើម</span>
+    </button>
+    <button class="nav-btn">
+      <span style="font-size: 16px;">🎬</span>
+      <span>រឿង</span>
+    </button>
+    <button class="nav-btn">
+      <span style="font-size: 16px;">💳</span>
+      <span>Wallet</span>
+    </button>
+    <button class="nav-btn">
+      <span style="font-size: 16px;">👤</span>
+      <span>គណនី</span>
+    </button>
   </nav>
 
   <script>
-    // ១. កំណត់ទិន្នន័យបញ្ជីរឿង (ងាយស្រួលបន្ថែមរឿងថ្មី ឬតំណភ្ជាប់ m3u8)
+    // 1. បញ្ជីរឿង (Data List)
     const moviesData = [
       {
         id: 1,
@@ -459,9 +563,7 @@
         rating: "8.8",
         genre: "Drama • Mystery",
         poster: "IMG_3834.PNG",
-        episodes: [
-          { ep: 1, url: "" }
-        ]
+        episodes: [{ ep: 1, url: "" }]
       },
       {
         id: 3,
@@ -469,115 +571,91 @@
         rating: "8.6",
         genre: "Romance • Drama",
         poster: "IMG_3834.PNG",
-        episodes: [
-          { ep: 1, url: "" }
-        ]
+        episodes: [{ ep: 1, url: "" }]
       }
     ];
 
     let currentMovie = null;
-    let currentEpisodeIndex = 0;
     const player = document.getElementById("player");
 
-    // ២. ចាប់ផ្តើម Telegram WebApp
-    if (window.Telegram && window.Telegram.WebApp) {
-      const tg = window.Telegram.WebApp;
-      tg.ready();
-      tg.expand();
-
-      // បង្ហាញឈ្មោះ User ប្រសិនបើមាន
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        document.getElementById("user-display").innerText = "👤 " + tg.initDataUnsafe.user.first_name;
-      }
+    // 2. Telegram WebApp Init
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
     }
 
-    // ៣. បង្ហាញបញ្ជីរឿងលើ Screen
+    // 3. Render Movie Card
     function renderMovies(list) {
-      const container = document.getElementById("movies-container");
-      const emptyState = document.getElementById("empty-state");
+      const container = document.getElementById("moviesContainer");
       container.innerHTML = "";
 
-      if (list.length === 0) {
-        emptyState.style.display = "block";
-        return;
-      }
-      emptyState.style.display = "none";
-
-      list.forEach(movie => {
+      list.forEach(m => {
         const card = document.createElement("div");
         card.className = "movie-card";
-        card.onclick = () => openMovieDetail(movie);
+        card.onclick = () => openMovieDetail(m);
         card.innerHTML = `
-          <img class="movie-poster" src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://placehold.co/150x220/1e1e1e/fff?text=Poster'">
+          <div class="poster-wrap">
+            <span class="hd-badge">HD</span>
+            <img class="poster-img" src="${m.poster}" alt="${m.title}" onerror="this.src='https://placehold.co/150x220/1e1e1e/fff?text=No+Image'">
+            <span class="rating-badge">⭐ ${m.rating}</span>
+          </div>
           <div class="movie-info">
-            <div class="movie-title">${movie.title}</div>
-            <div class="movie-rating">⭐ ${movie.rating}</div>
-            <div class="movie-type">${movie.genre}</div>
+            <div class="movie-title">${m.title}</div>
+            <div class="movie-type">${m.genre}</div>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    // ៤. មុខងារចាក់រឿង (HLS Streaming)
+    // 4. Video Player & Streaming
     function playEpisode(index) {
       if (!currentMovie || !currentMovie.episodes[index]) return;
-
       const epData = currentMovie.episodes[index];
+
       if (!epData.url) {
-        alert("ភាគ " + epData.ep + " មិនទាន់មានវីដេអូនៅឡើយទេ!");
+        alert("ភាគ " + epData.ep + " មិនទាន់មានវីដេអូទេ!");
         return;
       }
 
-      currentEpisodeIndex = index;
-
-      // ធ្វើបច្ចុប្បន្នភាពប៊ូតុង Active លើភាគ
-      document.querySelectorAll(".ep-btn").forEach((btn, idx) => {
+      document.querySelectorAll(".ep-card").forEach((btn, idx) => {
         btn.classList.toggle("active", idx === index);
       });
 
-      // បិទ HLS Instance ចាស់
       if (window.hlsPlayer) {
         window.hlsPlayer.destroy();
         window.hlsPlayer = null;
       }
 
-      // iOS Safari (គាំទ្រ HLS ធម្មជាតិ)
       if (player.canPlayType("application/vnd.apple.mpegurl")) {
         player.src = epData.url;
         player.load();
-        player.play().catch(e => console.log("Play failed:", e));
-      } 
-      // Android/Chrome (ប្រើ Hls.js)
-      else if (window.Hls && Hls.isSupported()) {
+        player.play().catch(e => console.log(e));
+      } else if (window.Hls && Hls.isSupported()) {
         window.hlsPlayer = new Hls();
         window.hlsPlayer.loadSource(epData.url);
         window.hlsPlayer.attachMedia(player);
-        window.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
-          player.play().catch(e => console.log("Play failed:", e));
-        });
+        window.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => player.play().catch(e => console.log(e)));
       }
     }
 
-    // ៥. បើកផ្ទាំង Player
     function openMovieDetail(movie) {
       currentMovie = movie;
-      document.getElementById("detail-title").innerText = movie.title;
-      document.getElementById("detail-meta").innerText = `⭐ ${movie.rating} • 🎭 ${movie.genre}`;
+      document.getElementById("modalTitle").innerText = movie.title;
+      document.getElementById("modalMeta").innerText = `⭐ ${movie.rating} • ${movie.genre}`;
 
-      // បង្កើតប៊ូតុងភាគ
-      const epContainer = document.getElementById("episode-container");
+      const epContainer = document.getElementById("episodesContainer");
       epContainer.innerHTML = "";
-      movie.episodes.forEach((ep, index) => {
+      movie.episodes.forEach((ep, idx) => {
         const btn = document.createElement("button");
-        btn.className = "ep-btn";
+        btn.className = "ep-card";
         btn.innerText = `ភាគ ${ep.ep}`;
-        btn.onclick = () => playEpisode(index);
+        btn.onclick = () => playEpisode(idx);
         epContainer.appendChild(btn);
       });
 
       document.getElementById("movie-detail").style.display = "block";
-      playEpisode(0); // ចាក់ភាគ ១ ភ្លាម
+      playEpisode(0);
     }
 
     function playMovieById(id) {
@@ -595,21 +673,13 @@
       document.getElementById("movie-detail").style.display = "none";
     }
 
-    // ស្វ័យប្រវត្តចាក់ភាគបន្ទាប់ពេលចប់
-    player.onended = function () {
-      if (currentMovie && currentEpisodeIndex + 1 < currentMovie.episodes.length) {
-        playEpisode(currentEpisodeIndex + 1);
-      }
-    };
-
-    // ៦. ស្វែងរកឈ្មោះរឿង
-    document.getElementById("search-input").addEventListener("input", function () {
-      const keyword = this.value.toLowerCase().trim();
-      const filtered = moviesData.filter(m => m.title.toLowerCase().includes(keyword));
+    // 5. Search Filter
+    document.getElementById("searchInput").addEventListener("input", function() {
+      const val = this.value.toLowerCase().trim();
+      const filtered = moviesData.filter(m => m.title.toLowerCase().includes(val));
       renderMovies(filtered);
     });
 
-    // ៧. Link ទៅកាន់ Channel
     function openChannel() {
       const link = "https://t.me/khmermoviehd88";
       if (window.Telegram?.WebApp?.openTelegramLink) {
@@ -619,7 +689,6 @@
       }
     }
 
-    // Load ទិន្នន័យលើកដំបូង
     renderMovies(moviesData);
   </script>
 </body>

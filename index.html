@@ -441,9 +441,9 @@ body.detail-open .bottom{
       <span>មើលទាំងអស់ →</span>
     </div>
 
-    <div id="movies" class="movies">
-<div class="card" data-title="កំពូលថាមពលចម្លែក"
-     onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
+   <div class="card"
+  data-title="កំពូលថាមពលចម្លែក"
+  onpointerup="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
 
   <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
 
@@ -546,6 +546,12 @@ function openMovie(){
 
 function openMovieDetail(title, rating, type){
 
+  const oldDetail = document.getElementById("movie-detail");
+
+  if(oldDetail){
+    oldDetail.remove();
+  }
+
   const detail = document.createElement("div");
 
   detail.id = "movie-detail";
@@ -554,18 +560,24 @@ function openMovieDetail(title, rating, type){
     <div class="detail-box">
 
       <div class="detail-video">
-  <iframe
-    src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
-    loading="lazy"
-    style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
-    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-    allowfullscreen>
-  </iframe>
-</div>
 
-<button class="close-detail" onclick="closeMovieDetail()">
-  ✕ បិទរឿង
-</button>
+        <iframe
+          id="movie-player"
+          src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
+          loading="lazy"
+          style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
+          allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+          allowfullscreen>
+        </iframe>
+
+      </div>
+
+      <button
+        class="close-detail"
+        onclick="closeMovieDetail()">
+        ✕ បិទរឿង
+      </button>
+
       <div class="detail-content">
 
         <div class="detail-label">
@@ -583,8 +595,7 @@ function openMovieDetail(title, rating, type){
         </div>
 
         <p class="detail-description">
-          រឿងថ្មីៗ និងរឿងពេញនិយម
-          ពី KHMER MOVIE HD។
+          🎬 រឿងនេះមាននៅលើ KHMER MOVIE HD
         </p>
 
         <div class="season-title">
@@ -614,7 +625,7 @@ function openMovieDetail(title, rating, type){
         <button
           class="channel-button"
           onclick="window.open('https://t.me/khmermoviehd88','_blank')">
-          📢 ចូល Channel
+          📢 ទៅ Channel
         </button>
 
       </div>
@@ -633,7 +644,6 @@ function openMovieDetail(title, rating, type){
   }
 
 }
-
 function closeMovieDetail(){
 
   const detail =
@@ -656,24 +666,29 @@ function closeMovieDetail(){
 
 function playEpisode(ep){
 
-  const player =
-    document.querySelector("#movie-detail iframe");
+  const player = document.querySelector("#movie-player");
 
-  if(player){
-    player.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
+  if(!player){
+    return;
   }
 
-}
+  const episodes = {
+    1: "https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3",
+    2: "",
+    3: "",
+    4: ""
+  };
 
-function watchMovie(title){
+  if(!episodes[ep]){
+    alert("EP " + ep + " មិនទាន់មានវីដេអូទេ");
+    return;
+  }
 
-  openMovieDetail(
-    title,
-    "9.1",
-    "Action • Historical"
-  );
+  player.src = episodes[ep];
+
+  player.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 
 }

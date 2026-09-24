@@ -537,7 +537,7 @@ search.addEventListener("input", function(){
 function openMovie(){
 
   openMovieDetail(
-    "រឿងថ្មីប្រចាំសប្តាហ៍",
+    "កំពូលថាមពលចម្លែក",
     "9.1",
     "Action • Historical"
   );
@@ -546,32 +546,28 @@ function openMovie(){
 
 function openMovieDetail(title, rating, type){
 
-  const oldDetail =
-    document.getElementById("movie-detail");
-
-  if(oldDetail){
-    oldDetail.remove();
-  }
-
-  const detail =
-    document.createElement("div");
+  const detail = document.createElement("div");
 
   detail.id = "movie-detail";
+
   detail.innerHTML = `
-<iframe
-  src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
-  loading="lazy"
-  style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
-  allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
-  allowfullscreen>
-</iframe>
-<button
-  onclick="closeMovieDetail()"
-  style="display:block;width:calc(100% - 24px);margin:12px auto 16px;padding:12px;border:0;border-radius:12px;background:#ff7200;color:#fff;font-size:16px;font-weight:700;text-align:center;cursor:pointer;">
+    <div class="detail-box">
+
+      <div class="detail-video">
+  <iframe
+    src="https://player.mediadelivery.net/play/761752/a203a185-73bd-4df6-ab94-231a93731de3"
+    loading="lazy"
+    style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;"
+    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<button class="close-detail" onclick="closeMovieDetail()">
   ✕ បិទរឿង
 </button>
-  <div class="detail-content">
-  
+      <div class="detail-content">
+
         <div class="detail-label">
           🔥 កំពុងពេញនិយម
         </div>
@@ -591,56 +587,82 @@ function openMovieDetail(title, rating, type){
           ពី KHMER MOVIE HD។
         </p>
 
-        <button
-  class="watch-button"
-  onclick="playMovie()">
-  ▶️ មើលរឿង
-</button>
+        <div class="season-title">
+          📺 Seasons
+        </div>
+
+        <div class="episodes">
+
+          <button onclick="playEpisode(1)">
+            ▶️ EP 1
+          </button>
+
+          <button onclick="playEpisode(2)">
+            ▶️ EP 2
+          </button>
+
+          <button onclick="playEpisode(3)">
+            ▶️ EP 3
+          </button>
+
+          <button onclick="playEpisode(4)">
+            ▶️ EP 4
+          </button>
+
+        </div>
 
         <button
-  class="channel-button"
-  onclick="window.open('https://t.me/khmermoviehd88','_blank')">
-  📢 ចូល Channel
-</button>
+          class="channel-button"
+          onclick="window.open('https://t.me/khmermoviehd88','_blank')">
+          📢 ចូល Channel
+        </button>
 
       </div>
 
     </div>
   `;
+
   document.body.appendChild(detail);
-document.body.classList.add("detail-open");
 
-const bottom = document.querySelector(".bottom");
-if(bottom){
-  bottom.style.display = "none";
+  document.body.classList.add("detail-open");
+
+  const bottom = document.querySelector(".bottom");
+
+  if(bottom){
+    bottom.style.display = "none";
+  }
+
 }
-
 
 function closeMovieDetail(){
 
   const detail =
     document.getElementById("movie-detail");
 
- if(detail){
-  detail.remove();
+  if(detail){
+    detail.remove();
+  }
+
   document.body.classList.remove("detail-open");
 
-  const bottom = document.querySelector(".bottom");
+  const bottom =
+    document.querySelector(".bottom");
+
   if(bottom){
     bottom.style.display = "grid";
   }
 
 }
 
-function playMovie(){
+function playEpisode(ep){
 
   const player =
     document.querySelector("#movie-detail iframe");
 
   if(player){
     player.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
+      behavior:"smooth",
+      block:"center"
     });
   }
 
@@ -648,13 +670,10 @@ function playMovie(){
 
 function watchMovie(title){
 
-  window.open(
-    "https://t.me/khmermoviehdbot",
-    "_blank"
+  openMovieDetail(
+    title,
+    "9.1",
+    "Action • Historical"
   );
 
 }
-</script>
-
-</body>
-</html>

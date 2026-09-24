@@ -199,12 +199,6 @@ body{
   padding:7px;
   z-index:20;
 }
-.bottom{
-  position:fixed;
-  ...
-  z-index:20;
-
-}
 .nav{
   border:0;
   background:transparent;
@@ -443,7 +437,10 @@ body.detail-open .bottom{
 
    <div class="card"
   data-title="កំពូលថាមពលចម្លែក"
-  onpointerup="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
+  onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')"
+  role="button"
+  tabindex="0"
+  style="cursor:pointer;">
 
   <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
 
@@ -456,7 +453,10 @@ body.detail-open .bottom{
 </div>
 
 <div class="card" data-title="ដោះបណ្ដាសាស៊យ"
-     onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')">
+     onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')"
+     role="button"
+     tabindex="0"
+     style="cursor:pointer;">
   <img class="movie-poster" src="IMG_3834.PNG" alt="ដោះបណ្ដាសាស៊យ">
   <div class="info">
     <div class="title">ដោះបណ្ដាសាស៊យ</div>
@@ -466,7 +466,10 @@ body.detail-open .bottom{
 </div>
 
 <div class="card" data-title="ស្នេហាជ្រៅដូចសមុទ្រ"
-     onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')">
+     onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')"
+     role="button"
+     tabindex="0"
+     style="cursor:pointer;">
   <img class="movie-poster" src="IMG_3834.PNG" alt="ស្នេហាជ្រៅដូចសមុទ្រ">
   <div class="info">
     <div class="title">ស្នេហាជ្រៅដូចសមុទ្រ</div>
@@ -692,3 +695,6 @@ function playEpisode(ep){
   });
 
 }
+</script>
+</body>
+</html>

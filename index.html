@@ -487,18 +487,17 @@ function openMovie(){
 
 function openMovieDetail(title, rating, type){
 
-  alert("OPEN DETAIL OK");
-  return;
-
   const oldDetail =
-  document.getElementById("movie-detail");
+    document.getElementById("movie-detail");
 
-const detail =
-  document.createElement("div");
+  if(oldDetail){
+    oldDetail.remove();
+  }
 
-detail.id = "movie-detail";
+  const detail =
+    document.createElement("div");
+
   detail.id = "movie-detail";
-
   detail.innerHTML = `
   <div class="detail-box">
 

@@ -2,8 +2,13 @@
 <html lang="km">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>KHMER MOVIE HD</title>
+
+<!-- Telegram Mini App SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- HLS.js សម្រាប់ Stream វីដេអូ .m3u8 លើ Android -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
 *{
@@ -16,6 +21,7 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:#090909;
   color:#fff;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .app{
@@ -26,23 +32,60 @@ body{
 }
 
 .header{
-  padding:20px 18px 12px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  padding:14px 18px;
+  gap:12px;
 }
 
-.logo{
-  font-size:21px;
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.logo-small{
+  width:52px;
+  height:52px;
+  object-fit:cover;
+  border-radius:12px;
+  flex-shrink:0;
+  background:#222;
+}
+
+.header-text{
+  min-width:0;
+}
+
+.header-title{
+  font-size:19px;
   font-weight:800;
+  color:#fff;
+  white-space:nowrap;
+}
+
+.header-title span{
+  color:#ff7200;
+}
+
+.header-subtitle{
+  color:#777;
+  font-size:12px;
+  margin-top:3px;
+  white-space:nowrap;
 }
 
 .balance{
+  flex-shrink:0;
   background:#191919;
   border:1px solid #333;
-  border-radius:20px;
-  padding:9px 14px;
+  border-radius:25px;
+  padding:10px 15px;
   font-size:14px;
+  font-weight:600;
+  white-space:nowrap;
 }
 
 .search{
@@ -91,6 +134,7 @@ body{
   border-radius:13px;
   font-weight:700;
   font-size:15px;
+  cursor:pointer;
 }
 
 .section{
@@ -127,6 +171,7 @@ body{
   color:#ccc;
   padding:8px 13px;
   border-radius:20px;
+  cursor:pointer;
 }
 
 .category.active{
@@ -146,21 +191,15 @@ body{
   border:1px solid #292929;
   border-radius:15px;
   overflow:hidden;
+  cursor:pointer;
 }
+
 .movie-poster{
   width:100%;
   aspect-ratio:2/3;
   object-fit:cover;
   display:block;
-}
-.poster{
-  aspect-ratio:2/3;
-  background:
-    linear-gradient(135deg,#3a2518,#161616);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:38px;
+  background:#222;
 }
 
 .info{
@@ -207,6 +246,7 @@ body{
   padding:9px 4px;
   border-radius:15px;
   font-size:12px;
+  cursor:pointer;
 }
 
 .nav.active{
@@ -226,145 +266,76 @@ body{
   color:#888;
   padding:35px;
 }
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:14px 18px;
-  gap:12px;
-}
 
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
-
-.logo-small{
-  width:52px;
-  height:52px;
-  object-fit:cover;
-  border-radius:12px;
-  flex-shrink:0;
-}
-
-.header-text{
-  min-width:0;
-}
-
-.header-title{
-  font-size:19px;
-  font-weight:800;
-  color:#fff;
-  white-space:nowrap;
-}
-
-.header-title span{
-  color:#ff7200;
-}
-
-.header-subtitle{
-  color:#777;
-  font-size:12px;
-  margin-top:3px;
-  white-space:nowrap;
-}
-
-.balance{
-  flex-shrink:0;
-  background:#191919;
-  border:1px solid #333;
-  border-radius:25px;
-  padding:10px 15px;
-  font-size:14px;
-  font-weight:600;
-  white-space:nowrap;
-}
-
-@media(max-width:420px){
-  .header{
-    padding:12px 16px;
-  }
-
-  .logo-small{
-    width:48px;
-    height:48px;
-  }
-
-  .header-title{
-    font-size:16px;
-  }
-
-  .header-subtitle{
-    font-size:10px;
-  }
-
-  .balance{
-    padding:9px 12px;
-    font-size:13px;
-  
-.detail-poster{
-  width:150px !important;
-  height:225px !important;
-  max-width:150px !important;
-  object-fit:cover;
-  display:block;
-  margin:10px auto 18px;
-  border-radius:14px;
-}
-
-}
-.detail-box{
-  position:relative;
-}
-
-.close-detail{
-  position:static !important;
-  display:block;
-  width:calc(100% - 24px);
-  margin:12px auto 16px;
-  padding:12px;
-  border:0;
-  border-radius:12px;
-  background:#ff7200;
-  color:#fff;
-  font-size:16px;
-  font-weight:700;
-  text-align:center;
-  cursor:pointer;
-  }
+/* Modal Detail View */
 #movie-detail{
   position:fixed;
   inset:0;
   z-index:99999;
   background:#090909;
   overflow-y:auto;
-  padding:20px 0 100px;
+  padding:15px 15px 80px;
 }
 
 #movie-detail .detail-box{
   width:100%;
   max-width:700px;
   margin:0 auto;
-  background:#090909;
-  min-height:100vh;
 }
 
-#movie-detail iframe{
-  width:100%;
-  aspect-ratio:16/9;
+.close-detail{
   display:block;
+  width:100%;
+  margin:12px auto 16px;
+  padding:12px;
   border:0;
+  border-radius:12px;
+  background:#333;
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  text-align:center;
+  cursor:pointer;
 }
 
-#movie-detail .detail-content{
-  padding:18px;
+.detail-content h1{
+  font-size:22px;
+  margin:12px 0 6px;
 }
 
-#movie-detail h1{
-  font-size:28px;
-  margin:12px 0;
+.episodes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:15px 0;
+}
+
+.episodes button{
+  background:#1c1c1c;
+  color:#fff;
+  border:1px solid #333;
+  padding:10px 18px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.episodes button:active{
+  background:#ff7200;
+}
+
+.channel-button{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:12px;
+  background:#ff7200;
+  color:#fff;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  margin-top:10px;
 }
 
 body.detail-open .bottom{
@@ -377,53 +348,30 @@ body.detail-open .bottom{
 <div class="app">
 
   <header class="header">
-
-  <div class="header-left">
-
-    <img
-      src="IMG_3834.PNG"
-      alt="KHMER MOVIE HD"
-      class="logo-small"
-    >
-
-    <div class="header-text">
-      <div class="header-title">
-        KHMER MOVIE
-        <span>HD</span>
-      </div>
-
-      <div class="header-subtitle">
-        រឿងថ្មីៗ • រឿងពេញនិយម
+    <div class="header-left">
+      <img src="IMG_3834.PNG" alt="KHMER MOVIE HD" class="logo-small">
+      <div class="header-text">
+        <div class="header-title">KHMER MOVIE <span>HD</span></div>
+        <div class="header-subtitle">រឿងថ្មីៗ • រឿងពេញនិយម</div>
       </div>
     </div>
-
-  </div>
-
-  <div class="balance">
-    💰 $0.00
-  </div>
-
-</header>
+    <div class="balance">💰 $0.00</div>
+  </header>
 
   <div class="search">
-    <input
-      id="search"
-      type="search"
-      placeholder="🔎 ស្វែងរកឈ្មោះរឿង..."
-    >
+    <input id="search" type="search" placeholder="🔎 ស្វែងរកឈ្មោះរឿង...">
   </div>
 
   <section class="hero">
     <small>🔥 កំពុងពេញនិយម</small>
     <h1>រឿងថ្មីប្រចាំសប្តាហ៍</h1>
     <p>⭐ 9.1 • Historical • Action</p>
-    <button type="button" onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical'); return false;">
+    <button type="button" onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
       មើលរឿង →
     </button>
   </section>
 
   <section class="section">
-
     <div class="categories">
       <button class="category active">ទាំងអស់</button>
       <button class="category">🔥 ពេញនិយម</button>
@@ -436,129 +384,85 @@ body.detail-open .bottom{
       <span>មើលទាំងអស់ →</span>
     </div>
 
-   <div class="card"
-  data-title="កំពូលថាមពលចម្លែក"
-  onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')"
-  role="button"
-  tabindex="0"
-  style="cursor:pointer;">
+    <div class="movies">
+      <div class="card" data-title="កំពូលថាមពលចម្លែក" onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')">
+        <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
+        <div class="info">
+          <div class="title">កំពូលថាមពលចម្លែក</div>
+          <div class="rating">⭐ 9.1</div>
+          <div class="type">Action • Historical</div>
+        </div>
+      </div>
 
-  <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
+      <div class="card" data-title="ដោះបណ្ដាសាស៊យ" onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')">
+        <img class="movie-poster" src="IMG_3834.PNG" alt="ដោះបណ្ដាសាស៊យ">
+        <div class="info">
+          <div class="title">ដោះបណ្ដាសាស៊យ</div>
+          <div class="rating">⭐ 8.8</div>
+          <div class="type">Drama</div>
+        </div>
+      </div>
 
-  <div class="info">
-    <div class="title">កំពូលថាមពលចម្លែក</div>
-    <div class="rating">⭐ 9.1</div>
-    <div class="type">Action • Historical</div>
-  </div>
-
-</div>
-
-<div class="card" data-title="ដោះបណ្ដាសាស៊យ"
-     onclick="openMovieDetail('ដោះបណ្ដាសាស៊យ','8.8','Drama')">
-  <img class="movie-poster" src="IMG_3834.PNG" alt="ដោះបណ្ដាសាស៊យ">
-  <div class="info">
-    <div class="title">ដោះបណ្ដាសាស៊យ</div>
-    <div class="rating">⭐ 8.8</div>
-    <div class="type">Drama</div>
-  </div>
-</div>
-
-<div class="card" data-title="ស្នេហាជ្រៅដូចសមុទ្រ"
-     onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')">
-  <img class="movie-poster" src="IMG_3834.PNG" alt="ស្នេហាជ្រៅដូចសមុទ្រ">
-  <div class="info">
-    <div class="title">ស្នេហាជ្រៅដូចសមុទ្រ</div>
-    <div class="rating">⭐ 8.6</div>
-    <div class="type">Romance</div>
-  </div>
-</div>
-    <div id="empty" class="empty">
-      មិនមានរឿងដែលរកឃើញទេ 😔
+      <div class="card" data-title="ស្នេហាជ្រៅដូចសមុទ្រ" onclick="openMovieDetail('ស្នេហាជ្រៅដូចសមុទ្រ','8.6','Romance')">
+        <img class="movie-poster" src="IMG_3834.PNG" alt="ស្នេហាជ្រៅដូចសមុទ្រ">
+        <div class="info">
+          <div class="title">ស្នេហាជ្រៅដូចសមុទ្រ</div>
+          <div class="rating">⭐ 8.6</div>
+          <div class="type">Romance</div>
+        </div>
+      </div>
     </div>
 
+    <div id="empty" class="empty">មិនមានរឿងដែលរកឃើញទេ 😔</div>
   </section>
 
 </div>
 
 <nav class="bottom">
-  <button class="nav active">
-    <span class="nav-icon">🏠</span>
-    ទំព័រដើម
-  </button>
-
-  <button class="nav">
-    <span class="nav-icon">🎬</span>
-    រឿង
-  </button>
-
-  <button class="nav">
-    <span class="nav-icon">💳</span>
-    Wallet
-  </button>
-
-  <button class="nav">
-    <span class="nav-icon">👤</span>
-    គណនី
-  </button>
+  <button class="nav active"><span class="nav-icon">🏠</span>ទំព័រដើម</button>
+  <button class="nav"><span class="nav-icon">🎬</span>រឿង</button>
+  <button class="nav"><span class="nav-icon">💳</span>Wallet</button>
+  <button class="nav"><span class="nav-icon">👤</span>គណនី</button>
 </nav>
 
 <script>
+// បើកដំណើរការ Telegram WebApp
+if (window.Telegram && window.Telegram.WebApp) {
+  window.Telegram.WebApp.ready();
+  window.Telegram.WebApp.expand();
+}
 
 const search = document.getElementById("search");
 const cards = document.querySelectorAll(".card");
 const empty = document.getElementById("empty");
 
 search.addEventListener("input", function(){
-
   const keyword = this.value.toLowerCase().trim();
   let found = 0;
 
   cards.forEach(card => {
-
-    const title =
-      card.dataset.title.toLowerCase();
-
+    const title = card.dataset.title.toLowerCase();
     if(title.includes(keyword)){
       card.style.display = "";
       found++;
     }else{
       card.style.display = "none";
     }
-
   });
 
-  empty.style.display =
-    found === 0 ? "block" : "none";
-
+  empty.style.display = found === 0 ? "block" : "none";
 });
 
-function openMovie(){
-
-  openMovieDetail(
-    "កំពូលថាមពលចម្លែក",
-    "9.1",
-    "Action • Historical"
-  );
-
-}
-
 function openMovieDetail(title, rating, type){
-
   const oldDetail = document.getElementById("movie-detail");
-
-  if(oldDetail){
-    oldDetail.remove();
-  }
+  if(oldDetail) oldDetail.remove();
 
   const detail = document.createElement("div");
-
   detail.id = "movie-detail";
 
   detail.innerHTML = `
     <div class="detail-box">
-
       <div class="detail-video">
-
         <video
           id="movie-player"
           controls
@@ -566,150 +470,96 @@ function openMovieDetail(title, rating, type){
           webkit-playsinline
           preload="metadata"
           poster="IMG_3834.PNG"
-          style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#000;object-fit:contain;">
+          style="width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;display:block;">
         </video>
-
       </div>
 
-      <button
-        class="close-detail"
-        onclick="closeMovieDetail()">
-        ✕ បិទរឿង
-      </button>
+      <button class="close-detail" onclick="closeMovieDetail()">✕ បិទរឿង</button>
 
       <div class="detail-content">
-
-        <div class="detail-label">
-          🔥 កំពុងពេញនិយម
-        </div>
-
+        <div style="color:#ff7200;font-size:13px;">🔥 កំពុងពេញនិយម</div>
         <h1>${title}</h1>
+        <div style="color:#ffb000;font-size:13px;margin-bottom:4px;">⭐ ${rating}</div>
+        <div style="color:#888;font-size:12px;">🎭 ${type}</div>
 
-        <div class="detail-rating">
-          ⭐ ${rating}
-        </div>
-
-        <div class="detail-type">
-          🎭 ${type}
-        </div>
-
-        <p class="detail-description">
-          🎬 រឿងនេះមាននៅលើ KHMER MOVIE HD
-        </p>
-
-        <div class="season-title">
-          📺 Seasons
-        </div>
-
+        <div style="margin-top:16px;font-weight:bold;">📺 ជ្រើសរើសភាគ (Episodes)</div>
         <div class="episodes">
-
-          <button onclick="playEpisode(1)">
-            ▶️ EP 1
-          </button>
-
-          <button onclick="playEpisode(2)">
-            ▶️ EP 2
-          </button>
-
-          <button onclick="playEpisode(3)">
-            ▶️ EP 3
-          </button>
-
-          <button onclick="playEpisode(4)">
-            ▶️ EP 4
-          </button>
-
+          <button onclick="playEpisode(1)">▶️ ភាគ ១</button>
+          <button onclick="playEpisode(2)">▶️ ភាគ ២</button>
+          <button onclick="playEpisode(3)">▶️ ភាគ ៣</button>
         </div>
 
-        <button
-          class="channel-button"
-          onclick="window.open('https://t.me/khmermoviehd88','_blank')">
-          📢 ទៅ Channel
-        </button>
-
+        <button class="channel-button" onclick="openChannel()">📢 ទៅកាន់ Telegram Channel</button>
       </div>
-
     </div>
   `;
 
   document.body.appendChild(detail);
-
   document.body.classList.add("detail-open");
 
-  const bottom = document.querySelector(".bottom");
-
-  if(bottom){
-    bottom.style.display = "none";
-  }
-
+  // ចាក់ភាគ ១ ភ្លាមៗពេលបើក Detail
+  playEpisode(1);
 }
+
 function closeMovieDetail(){
-
-  const detail =
-    document.getElementById("movie-detail");
-
-  if(detail){
-    detail.remove();
+  const detail = document.getElementById("movie-detail");
+  if(window.hlsPlayer){
+    window.hlsPlayer.destroy();
+    window.hlsPlayer = null;
   }
-
+  if(detail) detail.remove();
   document.body.classList.remove("detail-open");
-
-  const bottom =
-    document.querySelector(".bottom");
-
-  if(bottom){
-    bottom.style.display = "grid";
-  }
-
 }
 
 function playEpisode(ep){
-
   const player = document.querySelector("#movie-player");
-
-  if(!player){
-    return;
-  }
+  if(!player) return;
 
   const episodes = {
     1: "https://vz-3a132f7d-c60.b-cdn.net/a203a185-73bd-4df6-ab94-231a93731de3/playlist.m3u8",
     2: "",
-    3: "",
-    4: ""
+    3: ""
   };
 
   const url = episodes[ep];
-
   if(!url){
-    alert("EP " + ep + " មិនទាន់មានវីដេអូទេ");
+    alert("ភាគ " + ep + " មិនទាន់មានវីដេអូទេ");
     return;
   }
 
+  // សម្អាត instance ចាស់
   if(window.hlsPlayer){
     window.hlsPlayer.destroy();
     window.hlsPlayer = null;
   }
 
+  // ពិនិត្យថាជា iOS/Safari ឬ Android
   if(player.canPlayType("application/vnd.apple.mpegurl")){
+    // សម្រាប់ iPhone / Safari (គាំទ្រ HLS ផ្ទាល់)
     player.src = url;
-  }else if(window.Hls && Hls.isSupported()){
+    player.load();
+    player.play().catch(e => console.log("User interaction needed:", e));
+  } else if(window.Hls && Hls.isSupported()){
+    // សម្រាប់ Android / Chrome (ប្រើ hls.js)
     window.hlsPlayer = new Hls();
     window.hlsPlayer.loadSource(url);
     window.hlsPlayer.attachMedia(player);
-  }else{
-    alert("Browser នេះមិនអាចចាក់វីដេអូនេះបានទេ");
-    return;
+    window.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function(){
+      player.play().catch(e => console.log("User interaction needed:", e));
+    });
+  } else {
+    alert("កម្មវិធីរុករកនេះមិនអាចចាក់វីដេអូបានទេ");
   }
-
-  player.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-  player.play().catch(function(){});
 }
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+function openChannel(){
+  const link = "https://t.me/khmermoviehd88";
+  if (window.Telegram?.WebApp?.openTelegramLink) {
+    window.Telegram.WebApp.openTelegramLink(link);
+  } else {
+    window.open(link, "_blank");
+  }
+}
 </script>
 </body>
 </html>

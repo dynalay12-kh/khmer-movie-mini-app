@@ -203,10 +203,7 @@ body{
   position:fixed;
   ...
   z-index:20;
-}
 
-body.detail-open .bottom{
-  display:none;
 }
 .nav{
   border:0;
@@ -343,12 +340,40 @@ body.detail-open .bottom{
   cursor:pointer;
   }
 #movie-detail{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#090909;
+  overflow-y:auto;
+  padding:20px 0 100px;
+}
+
+#movie-detail .detail-box{
+  width:100%;
+  max-width:700px;
+  margin:0 auto;
+  background:#090909;
   min-height:100vh;
-  padding-bottom:220px;
+}
+
+#movie-detail iframe{
+  width:100%;
+  aspect-ratio:16/9;
+  display:block;
+  border:0;
 }
 
 #movie-detail .detail-content{
-  padding-bottom:180px;
+  padding:18px;
+}
+
+#movie-detail h1{
+  font-size:28px;
+  margin:12px 0;
+}
+
+body.detail-open .bottom{
+  display:none;
 }
 </style>
 </head>
@@ -582,9 +607,8 @@ function openMovieDetail(title, rating, type){
 
     </div>
   `;
-
+  document.body.appendChild(detail);
   document.body.classList.add("detail-open");
-
 }
 
 function closeMovieDetail(){

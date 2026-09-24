@@ -384,7 +384,7 @@ body{
 
     <div id="movies" class="movies">
 <div class="card" data-title="កំពូលថាមពលចម្លែក"
-     onclick="alert('CARD OK')">
+     onclick="openMovieDetail('កំពូលថាមពលចម្លែក','9.1','Action • Historical')"
 
   <img class="movie-poster" src="IMG_3834.PNG" alt="កំពូលថាមពលចម្លែក">
 
@@ -487,14 +487,11 @@ function openMovie(){
 
 function openMovieDetail(title, rating, type){
 
+  alert("OPEN DETAIL OK");
+  return;
+
   const oldDetail =
     document.getElementById("movie-detail");
-
-  if(oldDetail){
-    oldDetail.remove();
-  }
-
-  const detail =
     document.createElement("div");
 
   detail.id = "movie-detail";

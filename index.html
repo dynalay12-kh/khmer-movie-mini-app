@@ -555,9 +555,9 @@
   </nav>
 
   <script>
-    // ១. កំណត់ Supabase Configuration
+    // ១. កំណត់ Supabase Configuration ជាមួយ Key ថ្មីត្រឹមត្រូវ
     const SUPABASE_URL = "https://gtqnmfodfnsrejlpwrph.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_A1J41PnxgMv1OIN_1Gupaw_1bTNPyiz";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0cW5tZm9kZm5zcmVqbHB3cnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNzU3MjUsImV4cCI6MjEwNTg1MTcyNX0.N0_JHGOF3SDR9UF-fehL8RATcFWQsCYaCtOJGnRSUWc";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let moviesData = [];
@@ -589,7 +589,6 @@
           moviesData = data;
           renderMovies(moviesData);
 
-          // Update Hero Section យករឿងទី ១ មកបង្ហាញ
           const first = moviesData[0];
           document.getElementById("heroTitle").innerText = first.title;
           document.getElementById("heroMeta").innerText = `⭐ ${first.rating || '9.0'} • ${first.genre || 'Action'}`;
@@ -716,7 +715,7 @@
       }
     }
 
-    // ចាប់ផ្ដើមទាញទិន្នន័យ
+    // ចាប់ផ្ដើមទាញទិន្នន័យពី Supabase
     fetchMovies();
   </script>
 </body>

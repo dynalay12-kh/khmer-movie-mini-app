@@ -13,6 +13,8 @@
   <!-- Telegram Web App SDK & HLS.js -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
@@ -337,6 +339,15 @@
       text-overflow: ellipsis;
     }
 
+    .empty-state {
+      display: none;
+      grid-column: span 3;
+      text-align: center;
+      color: #777;
+      padding: 30px 0;
+      font-size: 13px;
+    }
+
     /* Modal Player */
     #movie-detail {
       display: none;
@@ -458,7 +469,7 @@
           <div class="header-subtitle">រឿងថ្មីៗ • រឿងពេញនិយម</div>
         </div>
       </div>
-      <div class="balance-badge">
+      <div class="balance-badge" id="user-display">
         <span>💰</span> $0.00
       </div>
     </header>
@@ -475,9 +486,9 @@
     <div class="hero">
       <div class="hero-content">
         <div class="hero-tag">🔥 កំពុងពេញនិយម</div>
-        <h2 class="hero-title">កំពូលថាមពលចម្លែក</h2>
-        <div class="hero-meta">⭐ 9.1 • Historical • Action</div>
-        <button class="hero-btn" onclick="playMovieById(1)">
+        <h2 class="hero-title" id="heroTitle">រឿងថ្មីៗ</h2>
+        <div class="hero-meta" id="heroMeta">កំពុងទាញទិន្នន័យ...</div>
+        <button class="hero-btn" id="heroBtn" onclick="playFirstMovie()">
           ទស្សនាឥឡូវនេះ ➔
         </button>
       </div>
@@ -498,7 +509,9 @@
     </div>
 
     <!-- Movies Grid -->
-    <div class="movie-grid" id="moviesContainer"></div>
+    <div class="movie-grid" id="moviesContainer">
+      <div class="empty-state" id="emptyState" style="display: block;">កំពុងផ្ទុកទិន្នន័យ... ⏳</div>
+    </div>
   </div>
 
   <!-- Video Streaming Modal -->
@@ -542,52 +555,65 @@
   </nav>
 
   <script>
-    // 1. បញ្ជីរឿង (Data List)
-    const moviesData = [
-      {
-        id: 1,
-        title: "កំពូលថាមពលចម្លែក",
-        rating: "9.1",
-        genre: "Action • Historical",
-        poster: "IMG_3834.PNG",
-        episodes: [
-          { ep: 1, url: "https://vz-3a132f7d-c60.b-cdn.net/a203a185-73bd-4df6-ab94-231a93731de3/playlist.m3u8" },
-          { ep: 2, url: "" },
-          { ep: 3, url: "" },
-          { ep: 4, url: "" }
-        ]
-      },
-      {
-        id: 2,
-        title: "ដោះបណ្ដាសាស៊យ",
-        rating: "8.8",
-        genre: "Drama • Mystery",
-        poster: "IMG_3834.PNG",
-        episodes: [{ ep: 1, url: "" }]
-      },
-      {
-        id: 3,
-        title: "ស្នេហាជ្រៅដូចសមុទ្រ",
-        rating: "8.6",
-        genre: "Romance • Drama",
-        poster: "IMG_3834.PNG",
-        episodes: [{ ep: 1, url: "" }]
-      }
-    ];
+    // ១. កំណត់ Supabase Configuration
+    const SUPABASE_URL = "https://gtqnmfodfnsrejlpwrph.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_A1J41PnxgMv1OIN_1Gupaw_1bTNPyiz";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    let moviesData = [];
     let currentMovie = null;
     const player = document.getElementById("player");
 
-    // 2. Telegram WebApp Init
+    // ២. Telegram WebApp Init
     if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.ready();
-      window.Telegram.WebApp.expand();
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();
+
+      if (tg.initDataUnsafe?.user?.first_name) {
+        document.getElementById("user-display").innerHTML = `<span>👤</span> ${tg.initDataUnsafe.user.first_name}`;
+      }
     }
 
-    // 3. Render Movie Card
+    // ៣. ទាញទិន្នន័យរឿងចេញពី Supabase
+    async function fetchMovies() {
+      try {
+        const { data, error } = await _supabase
+          .from('movies')
+          .select('*')
+          .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          moviesData = data;
+          renderMovies(moviesData);
+
+          // Update Hero Section យករឿងទី ១ មកបង្ហាញ
+          const first = moviesData[0];
+          document.getElementById("heroTitle").innerText = first.title;
+          document.getElementById("heroMeta").innerText = `⭐ ${first.rating || '9.0'} • ${first.genre || 'Action'}`;
+        } else {
+          document.getElementById("emptyState").innerText = "មិនទាន់មានរឿងផុសនៅឡើយទេ 😔";
+        }
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        document.getElementById("emptyState").innerText = "បរាជ័យក្នុងការទាញទិន្នន័យ សូមព្យាយាមម្ដងទៀត!";
+      }
+    }
+
+    // ៤. បង្ហាញ Card រឿងលើ Screen
     function renderMovies(list) {
       const container = document.getElementById("moviesContainer");
+      const emptyState = document.getElementById("emptyState");
       container.innerHTML = "";
+
+      if (list.length === 0) {
+        container.appendChild(emptyState);
+        emptyState.style.display = "block";
+        emptyState.innerText = "មិនមានរឿងដែលត្រូវនឹងការស្វែងរកទេ 😔";
+        return;
+      }
 
       list.forEach(m => {
         const card = document.createElement("div");
@@ -596,21 +622,21 @@
         card.innerHTML = `
           <div class="poster-wrap">
             <span class="hd-badge">HD</span>
-            <img class="poster-img" src="${m.poster}" alt="${m.title}" onerror="this.src='https://placehold.co/150x220/1e1e1e/fff?text=No+Image'">
-            <span class="rating-badge">⭐ ${m.rating}</span>
+            <img class="poster-img" src="${m.poster || 'IMG_3834.PNG'}" alt="${m.title}" onerror="this.src='IMG_3834.PNG'">
+            <span class="rating-badge">⭐ ${m.rating || '9.0'}</span>
           </div>
           <div class="movie-info">
             <div class="movie-title">${m.title}</div>
-            <div class="movie-type">${m.genre}</div>
+            <div class="movie-type">${m.genre || 'Action'}</div>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    // 4. Video Player & Streaming
+    // ៥. ចាក់វីដេអូ Streaming (HLS)
     function playEpisode(index) {
-      if (!currentMovie || !currentMovie.episodes[index]) return;
+      if (!currentMovie || !currentMovie.episodes || !currentMovie.episodes[index]) return;
       const epData = currentMovie.episodes[index];
 
       if (!epData.url) {
@@ -642,11 +668,13 @@
     function openMovieDetail(movie) {
       currentMovie = movie;
       document.getElementById("modalTitle").innerText = movie.title;
-      document.getElementById("modalMeta").innerText = `⭐ ${movie.rating} • ${movie.genre}`;
+      document.getElementById("modalMeta").innerText = `⭐ ${movie.rating || '9.0'} • ${movie.genre || 'Action'}`;
 
       const epContainer = document.getElementById("episodesContainer");
       epContainer.innerHTML = "";
-      movie.episodes.forEach((ep, idx) => {
+
+      const episodes = Array.isArray(movie.episodes) ? movie.episodes : [];
+      episodes.forEach((ep, idx) => {
         const btn = document.createElement("button");
         btn.className = "ep-card";
         btn.innerText = `ភាគ ${ep.ep}`;
@@ -655,12 +683,11 @@
       });
 
       document.getElementById("movie-detail").style.display = "block";
-      playEpisode(0);
+      if (episodes.length > 0) playEpisode(0);
     }
 
-    function playMovieById(id) {
-      const movie = moviesData.find(m => m.id === id);
-      if (movie) openMovieDetail(movie);
+    function playFirstMovie() {
+      if (moviesData.length > 0) openMovieDetail(moviesData[0]);
     }
 
     function closePlayer() {
@@ -673,7 +700,7 @@
       document.getElementById("movie-detail").style.display = "none";
     }
 
-    // 5. Search Filter
+    // ៦. Filter ស្វែងរក
     document.getElementById("searchInput").addEventListener("input", function() {
       const val = this.value.toLowerCase().trim();
       const filtered = moviesData.filter(m => m.title.toLowerCase().includes(val));
@@ -689,7 +716,8 @@
       }
     }
 
-    renderMovies(moviesData);
+    // ចាប់ផ្ដើមទាញទិន្នន័យ
+    fetchMovies();
   </script>
 </body>
 </html>

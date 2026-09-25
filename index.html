@@ -48,6 +48,25 @@
       padding-bottom: 95px;
     }
 
+    /* Custom Toast Alert */
+    .custom-toast {
+      position: fixed;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 25, 0.95);
+      border: 1px solid var(--primary);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-size: 13px;
+      z-index: 9999999;
+      box-shadow: 0 8px 25px rgba(255, 94, 0, 0.35);
+      display: none;
+      white-space: nowrap;
+      backdrop-filter: blur(10px);
+    }
+
     /* Header */
     .header {
       display: flex;
@@ -457,6 +476,12 @@
 </head>
 
 <body>
+  <!-- Custom Popup Toast -->
+  <div id="customToast" class="custom-toast">
+    <strong style="color: #ff5e00;">KHMER MOVIE HD: </strong>
+    <span id="toastText"></span>
+  </div>
+
   <div class="app">
     <!-- Header -->
     <header class="header">
@@ -555,14 +580,28 @@
   </nav>
 
   <script>
-    // ១. កំណត់ Supabase Configuration ជាមួយ Key ថ្មីត្រឹមត្រូវ
+    // ១. កំណត់ Supabase Configuration
     const SUPABASE_URL = "https://gtqnmfodfnsrejlpwrph.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0cW5tZm9kZm5zcmVqbHB3cnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNzU3MjUsImV4cCI6MjEwNTg1MTcyNX0.N0_JHGOF3SDR9UF-fehL8RATcFWQsCYaCtOJGnRSUWc";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let moviesData = [];
     let currentMovie = null;
+    let toastTimeout = null;
     const player = document.getElementById("player");
+
+    // មុខងារបង្ហាញ Popup ឈ្មោះ KHMER MOVIE HD
+    function showAppToast(message) {
+      const toast = document.getElementById("customToast");
+      const toastText = document.getElementById("toastText");
+      toastText.innerText = message;
+      toast.style.display = "block";
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.style.display = "none";
+      }, 2500);
+    }
 
     // ២. Telegram WebApp Init
     if (window.Telegram?.WebApp) {
@@ -601,7 +640,7 @@
       }
     }
 
-    // ៤. បង្ហាញ Card រឿងលើ Screen
+    // ៤. បង្ហាញ Card រឿង
     function renderMovies(list) {
       const container = document.getElementById("moviesContainer");
       const emptyState = document.getElementById("emptyState");
@@ -638,8 +677,9 @@
       if (!currentMovie || !currentMovie.episodes || !currentMovie.episodes[index]) return;
       const epData = currentMovie.episodes[index];
 
+      // បង្ហាញ Toast ឈ្មោះ KHMER MOVIE HD
       if (!epData.url) {
-        alert("ភាគ " + epData.ep + " មិនទាន់មានវីដេអូទេ!");
+        showAppToast("ភាគ " + epData.ep + " មិនទាន់មានវីដេអូទេ!");
         return;
       }
 
@@ -715,7 +755,7 @@
       }
     }
 
-    // ចាប់ផ្ដើមទាញទិន្នន័យពី Supabase
+    // ចាប់ផ្ដើម
     fetchMovies();
   </script>
 </body>

@@ -2,89 +2,121 @@
 <html lang="km">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - បញ្ចូលរឿងច្រើនភាគ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin Panel - បញ្ចូលរឿងថ្មី</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0e0e11; color: #fff; padding: 20px; max-width: 520px; margin: auto; }
-    h2 { margin-bottom: 20px; color: #ff5e00; }
-    label { font-size: 13px; color: #a0a0a5; margin-top: 14px; display: block; }
-    input, textarea { width: 100%; padding: 12px; margin-top: 6px; border-radius: 10px; border: 1px solid #2a2a32; background: #18181f; color: #fff; box-sizing: border-box; font-size: 14px; }
-    input:focus, textarea:focus { border-color: #ff5e00; outline: none; }
-    textarea { height: 160px; font-family: monospace; font-size: 12px; resize: vertical; line-height: 1.5; }
-    small { color: #ff914d; font-size: 11px; display: block; margin-top: 4px; }
-    button { width: 100%; margin-top: 24px; padding: 14px; background: linear-gradient(135deg, #ff7300, #ff3c00); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kantumruy Pro', sans-serif; }
+    body { background-color: #0d0d11; color: #fff; padding: 20px 16px 50px; display: flex; justify-content: center; }
+    .admin-container { width: 100%; max-width: 480px; }
+    .panel-header { font-size: 20px; font-weight: 700; color: #ff6b00; margin-bottom: 22px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; color: #aaa; margin-bottom: 6px; }
+    label span { color: #ff3b30; }
+    input, select, textarea { width: 100%; background: #17171d; border: 1px solid #2a2a35; border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: #ff6b00; }
+    textarea { resize: vertical; min-height: 110px; font-family: monospace; font-size: 13px; line-height: 1.5; }
+    .note-text { font-size: 11px; color: #777; margin-top: 6px; }
+    .submit-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff7b00, #ff4500); color: #fff; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    #priceGroup { display: none; }
   </style>
 </head>
 <body>
-
-  <h2>🎬 បញ្ចូលរឿងថ្មី (Admin Panel)</h2>
-
-  <label>ឈ្មោះរឿង *</label>
-  <input type="text" id="title" placeholder="ឧ. កំពូលថាមពលចម្លែក">
-
-  <label>ពិន្ទុ (Rating)</label>
-  <input type="text" id="rating" value="9.1">
-
-  <label>ប្រភេទរឿង (Genre)</label>
-  <input type="text" id="genre" placeholder="ឧ. Action • Historical">
-
-  <label>Link រូបភាព Poster (URL)</label>
-  <input type="text" id="poster" placeholder="https://.../poster.jpg">
-
-  <label>Link វីដេអូគ្រប់ភាគ (.m3u8) *</label>
-  <textarea id="episodes_list" placeholder="ដាក់ Link វីដេអូ មួយបន្ទាត់ = មួយភាគ
-https://.../ep1/playlist.m3u8
-https://.../ep2/playlist.m3u8
-https://.../ep3/playlist.m3u8"></textarea>
-  <small>💡 ណែនាំ៖ មួយបន្ទាត់ជាតំណាងឱ្យភាគ ១, ២, ៣... រហូតដល់ភាគ ៦០។</small>
-
-  <button onclick="uploadMovie()">🚀 ផុសរឿងចូល App ភ្លាមៗ</button>
+  <div class="admin-container">
+    <div class="panel-header">🎬 បញ្ចូលរឿងថ្មី (Admin Panel)</div>
+    <form id="movieForm" onsubmit="handleFormSubmit(event)">
+      <div class="form-group">
+        <label>ឈ្មោះរឿង <span>*</span></label>
+        <input type="text" id="movieTitle" placeholder="ឧ. កំពូលថាមពលចម្លែក" required>
+      </div>
+      <div class="form-group">
+        <label>ពិន្ទុ (Rating)</label>
+        <input type="text" id="movieRating" placeholder="ឧ. 9.1" value="9.0">
+      </div>
+      <div class="form-group">
+        <label>ប្រភេទរឿង (Genre)</label>
+        <input type="text" id="movieGenre" placeholder="ឧ. Action • Historical" value="Action • Drama">
+      </div>
+      <div class="form-group">
+        <label>Link រូបភាព Poster (URL)</label>
+        <input type="url" id="moviePoster" placeholder="https://.../poster.jpg">
+      </div>
+      <div class="form-group">
+        <label>ប្រភេទការទស្សនា (Free / VIP) <span>*</span></label>
+        <select id="movieType" onchange="togglePriceBox()">
+          <option value="free">🎬 មើលឥតគិតថ្លៃ (Free)</option>
+          <option value="vip">🔒 រឿងលក់ (VIP)</option>
+        </select>
+      </div>
+      <div class="form-group" id="priceGroup">
+        <label style="color: #ff914d;">កំណត់តម្លៃរឿង ($ USD) <span>*</span></label>
+        <input type="number" id="moviePrice" placeholder="ឧ. 0.50 ឬ 1.00" step="0.10" value="0.50">
+      </div>
+      <div class="form-group">
+        <label>Link វីដេអូគ្រប់ភាគ (.m3u8) <span>*</span></label>
+        <textarea id="movieLinks" placeholder="ដាក់ Link វីដេអូ មួយបន្ទាត់ = មួយភាគ&#10;https://.../ep1/playlist.m3u8&#10;https://.../ep2/playlist.m3u8" required></textarea>
+        <div class="note-text">💡 ណែនាំ៖ មួយបន្ទាត់ជាតំណាងឱ្យភាគ ១, ២, ៣... រហូតដល់ភាគបញ្ចប់[cite: 6]។</div>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">🚀 ផុសរឿងចូល App ភ្លាមៗ</button>
+    </form>
+  </div>
 
   <script>
     const SUPABASE_URL = "https://gtqnmfodfnsrejlpwrph.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_A1J41PnxgMv1OIN_1Gupaw_1bTNPyiz"; 
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0cW5tZm9kZm5zcmVqbHB3cnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAzMDYxMjMsImV4cCI6MjA1NTg4MjEyM30.eyJhbm9uX3B1YmxpYyI6dHJ1ZX0";
+    
+    // បង្កើត Supabase Client
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function uploadMovie() {
-      const title = document.getElementById("title").value.trim();
-      const rating = document.getElementById("rating").value.trim() || "9.0";
-      const genre = document.getElementById("genre").value.trim() || "Action";
-      const poster = document.getElementById("poster").value.trim();
-      const rawEpisodes = document.getElementById("episodes_list").value.trim();
+    function togglePriceBox() {
+      const type = document.getElementById("movieType").value;
+      document.getElementById("priceGroup").style.display = (type === "vip") ? "block" : "none";
+    }
 
-      if (!title || !rawEpisodes) {
-        alert("សូមបំពេញឈ្មោះរឿង និង Link វីដេអូយ៉ាងហោចណាស់ ១ ភាគ!");
-        return;
-      }
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.innerText = "⏳ កំពុងដំណើរការ...";
 
-      const lines = rawEpisodes.split("\n");
-      const episodes = [];
+      const title = document.getElementById("movieTitle").value.trim();
+      const rating = document.getElementById("movieRating").value.trim() || "9.0";
+      const genre = document.getElementById("movieGenre").value.trim() || "General";
+      const poster = document.getElementById("moviePoster").value.trim() || "IMG_3834.PNG";
+      const isVip = document.getElementById("movieType").value === "vip";
+      const price = isVip ? (parseFloat(document.getElementById("moviePrice").value) || 0.50) : 0;
+      
+      const rawLinks = document.getElementById("movieLinks").value.trim();
+      const episodes = rawLinks.split("\n").map(l => l.trim()).filter(l => l.length > 0).map((url, idx) => ({
+        ep: idx + 1,
+        url: url
+      }));
 
-      lines.forEach((line) => {
-        const cleanUrl = line.trim();
-        if (cleanUrl) {
-          episodes.push({
-            ep: episodes.length + 1,
-            url: cleanUrl
-          });
-        }
-      });
+      const payload = { 
+        title: title, 
+        rating: rating, 
+        genre: genre, 
+        poster: poster, 
+        is_vip: isVip, 
+        price: price, 
+        episodes: episodes 
+      };
 
-      if (episodes.length === 0) {
-        alert("មិនមាន Link វីដេអូត្រឹមត្រូវទេ!");
-        return;
-      }
-
-      const { data, error } = await _supabase
-        .from('movies')
-        .insert([{ title, rating, genre, poster, episodes }]);
-
-      if (error) {
-        alert("មានបញ្ហាមិនអាចផុសបាន៖ " + error.message);
-      } else {
-        alert(`🎉 ផុសរឿងជោគជ័យហើយ! (សរុបមាន ${episodes.length} ភាគ)`);
-        location.reload();
+      try {
+        const { error } = await supabaseClient.from("movies").insert([payload]);
+        if (error) throw error;
+        alert("🎉 ផុសរឿងថ្មីបានជោគជ័យ!");
+        document.getElementById("movieForm").reset();
+        togglePriceBox();
+      } catch (err) {
+        alert("កំហុសក្នុងការផុស៖ " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "🚀 ផុសរឿងចូល App ភ្លាមៗ";
       }
     }
   </script>

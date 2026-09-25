@@ -10,11 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Telegram Web App SDK & HLS.js -->
+  <!-- Telegram WebApp SDK & HLS.js Streaming Engine -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
@@ -30,7 +28,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Kantumruy Pro', -apple-system, sans-serif;
+      font-family: 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
@@ -48,25 +46,6 @@
       padding-bottom: 95px;
     }
 
-    /* Custom Toast Alert */
-    .custom-toast {
-      position: fixed;
-      top: 25px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(20, 20, 25, 0.95);
-      border: 1px solid var(--primary);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 14px;
-      font-size: 13px;
-      z-index: 9999999;
-      box-shadow: 0 8px 25px rgba(255, 94, 0, 0.35);
-      display: none;
-      white-space: nowrap;
-      backdrop-filter: blur(10px);
-    }
-
     /* Header */
     .header {
       display: flex;
@@ -81,23 +60,18 @@
       gap: 12px;
     }
 
-    .logo-wrap {
-      position: relative;
-    }
-
     .logo-small {
       width: 46px;
       height: 46px;
       object-fit: cover;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      background: #1a1a20;
     }
 
     .header-title {
       font-size: 17px;
       font-weight: 700;
-      letter-spacing: 0.3px;
     }
 
     .header-title span {
@@ -109,8 +83,6 @@
     .header-subtitle {
       color: var(--text-muted);
       font-size: 11px;
-      font-weight: 400;
-      margin-top: 1px;
     }
 
     .balance-badge {
@@ -121,13 +93,14 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 6px 12px;
+      padding: 7px 13px;
       font-size: 13px;
       font-weight: 600;
       color: #ffc837;
+      cursor: pointer;
     }
 
-    /* Search Box */
+    /* Search */
     .search-wrap {
       padding: 0 18px 16px;
     }
@@ -140,13 +113,11 @@
       border-radius: 16px;
       padding: 11px 16px;
       gap: 10px;
-      transition: all 0.3s;
     }
 
     .search-box:focus-within {
       border-color: var(--primary);
       box-shadow: 0 0 15px var(--primary-glow);
-      background: rgba(255, 255, 255, 0.08);
     }
 
     .search-box input {
@@ -158,11 +129,7 @@
       font-size: 14px;
     }
 
-    .search-box input::placeholder {
-      color: #666;
-    }
-
-    /* Hero Banner */
+    /* Hero Spotlight */
     .hero {
       position: relative;
       margin: 0 18px 22px;
@@ -170,19 +137,14 @@
       overflow: hidden;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(255, 94, 0, 0.15) 0%, rgba(10, 10, 12, 0.95) 100%), #141419;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
 
     .hero-content {
-      padding: 24px 20px;
-      position: relative;
-      z-index: 2;
+      padding: 22px 18px;
     }
 
     .hero-tag {
       display: inline-flex;
-      align-items: center;
-      gap: 4px;
       background: rgba(255, 94, 0, 0.2);
       border: 1px solid rgba(255, 94, 0, 0.4);
       color: #ff914d;
@@ -193,16 +155,15 @@
     }
 
     .hero-title {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
-      margin-top: 10px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      margin-top: 8px;
     }
 
     .hero-meta {
       color: var(--text-muted);
       font-size: 12px;
-      margin: 6px 0 16px;
+      margin: 4px 0 14px;
     }
 
     .hero-btn {
@@ -212,19 +173,18 @@
       background: linear-gradient(135deg, #ff7300, #ff3c00);
       color: #fff;
       border: none;
-      padding: 10px 22px;
+      padding: 9px 20px;
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 15px var(--primary-glow);
     }
 
     /* Category Filter */
     .categories {
       display: flex;
-      gap: 10px;
-      padding: 0 18px 18px;
+      gap: 8px;
+      padding: 0 18px 16px;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -235,22 +195,18 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: #a0a0a5;
-      padding: 7px 15px;
+      padding: 7px 14px;
       border-radius: 12px;
       font-size: 12px;
-      font-weight: 500;
       cursor: pointer;
-      transition: all 0.2s;
     }
 
     .cat-pill.active {
       background: var(--primary);
       border-color: var(--primary);
       color: #fff;
-      box-shadow: 0 3px 12px var(--primary-glow);
     }
 
-    /* Section Title */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -261,16 +217,6 @@
     .section-header h3 {
       font-size: 16px;
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .see-all {
-      color: #ff8533;
-      font-size: 12px;
-      font-weight: 500;
-      text-decoration: none;
     }
 
     /* Movie Grid */
@@ -284,23 +230,18 @@
     .movie-card {
       position: relative;
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .movie-card:active {
-      transform: scale(0.96);
+      display: flex;
+      flex-direction: column;
     }
 
     .poster-wrap {
       position: relative;
       width: 100%;
       aspect-ratio: 2/3;
-      overflow: hidden;
       background: #1a1a22;
     }
 
@@ -310,29 +251,36 @@
       object-fit: cover;
     }
 
-    .hd-badge {
+    .vip-tag {
       position: absolute;
       top: 6px;
-      left: 6px;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(6px);
-      color: #fff;
+      right: 6px;
       font-size: 9px;
       font-weight: 700;
-      padding: 2px 5px;
-      border-radius: 5px;
-      border: 1px solid rgba(255,255,255,0.15);
+      padding: 2px 6px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    .tag-free {
+      background: #30d158;
+      color: #000;
+    }
+    .tag-vip {
+      background: #ff3b30;
+      color: #fff;
+    }
+    .tag-unlocked {
+      background: #007aff;
+      color: #fff;
     }
 
     .rating-badge {
       position: absolute;
       bottom: 6px;
-      right: 6px;
+      left: 6px;
       background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
       color: #ffc837;
       font-size: 10px;
-      font-weight: 600;
       padding: 2px 6px;
       border-radius: 6px;
     }
@@ -356,15 +304,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .empty-state {
-      display: none;
-      grid-column: span 3;
-      text-align: center;
-      color: #777;
-      padding: 30px 0;
-      font-size: 13px;
     }
 
     /* Modal Player */
@@ -398,14 +337,14 @@
 
     .modal-close-btn {
       width: 100%;
-      padding: 12px;
+      padding: 11px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border);
       color: #fff;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       border-radius: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       cursor: pointer;
     }
 
@@ -420,9 +359,9 @@
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border);
       color: #fff;
-      padding: 10px 0;
+      padding: 9px 0;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -430,7 +369,36 @@
     .ep-card.active {
       background: var(--primary);
       border-color: var(--primary);
-      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    /* Wallet Modal */
+    #walletModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .wallet-box {
+      max-width: 380px;
+      margin: 30px auto;
+      background: #15151a;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      text-align: center;
+    }
+
+    .qr-container {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 16px;
+      width: 210px;
+      margin: 14px auto;
     }
 
     /* Floating Bottom Nav */
@@ -449,7 +417,6 @@
       grid-template-columns: repeat(4, 1fr);
       padding: 6px;
       z-index: 1000;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
     .nav-btn {
@@ -459,7 +426,6 @@
       padding: 6px 0;
       border-radius: 14px;
       font-size: 11px;
-      font-weight: 500;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -470,36 +436,27 @@
     .nav-btn.active {
       color: #fff;
       background: linear-gradient(135deg, rgba(255, 94, 0, 0.9), rgba(255, 60, 0, 0.9));
-      box-shadow: 0 4px 12px var(--primary-glow);
     }
   </style>
 </head>
 
 <body>
-  <!-- Custom Popup Toast -->
-  <div id="customToast" class="custom-toast">
-    <strong style="color: #ff5e00;">KHMER MOVIE HD: </strong>
-    <span id="toastText"></span>
-  </div>
-
   <div class="app">
     <!-- Header -->
     <header class="header">
       <div class="header-left">
-        <div class="logo-wrap">
-          <img src="IMG_3834.PNG" alt="Logo" class="logo-small" onerror="this.src='https://placehold.co/100x100/1e1e1e/fff?text=KM'">
-        </div>
+        <img src="IMG_3834.PNG" alt="Logo" class="logo-small" onerror="this.src='https://placehold.co/100x100/1e1e1e/fff?text=KM'">
         <div>
           <div class="header-title">KHMER MOVIE <span>HD</span></div>
-          <div class="header-subtitle">រឿងថ្មីៗ • រឿងពេញនិយម</div>
+          <div class="header-subtitle" id="userDisplay">រឿងថ្មីៗ • រឿងពេញនិយម</div>
         </div>
       </div>
-      <div class="balance-badge" id="user-display">
-        <span>💰</span> $0.00
+      <div class="balance-badge" onclick="openWallet()">
+        <span>💰</span> <span id="balanceText">$0.00</span>
       </div>
     </header>
 
-    <!-- Search Input -->
+    <!-- Search -->
     <div class="search-wrap">
       <div class="search-box">
         <span>🔍</span>
@@ -511,9 +468,9 @@
     <div class="hero">
       <div class="hero-content">
         <div class="hero-tag">🔥 កំពុងពេញនិយម</div>
-        <h2 class="hero-title" id="heroTitle">រឿងថ្មីៗ</h2>
-        <div class="hero-meta" id="heroMeta">កំពុងទាញទិន្នន័យ...</div>
-        <button class="hero-btn" id="heroBtn" onclick="playFirstMovie()">
+        <h2 class="hero-title">កំពូលថាមពលចម្លែក</h2>
+        <div class="hero-meta">⭐ 9.1 • Historical • Action (FREE)</div>
+        <button class="hero-btn" onclick="checkAndPlayMovie(1)">
           ទស្សនាឥឡូវនេះ ➔
         </button>
       </div>
@@ -524,19 +481,15 @@
       <button class="cat-pill active">ទាំងអស់</button>
       <button class="cat-pill">🔥 ពេញនិយម</button>
       <button class="cat-pill">🆕 រឿងថ្មី</button>
-      <button class="cat-pill">❤️ ចូលចិត្ត</button>
+      <button class="cat-pill">💎 រឿង VIP</button>
     </div>
 
-    <!-- Section Content -->
     <div class="section-header">
       <h3>🎬 រឿងថ្មីៗ</h3>
-      <a href="#" class="see-all">មើលទាំងអស់ ➔</a>
     </div>
 
-    <!-- Movies Grid -->
-    <div class="movie-grid" id="moviesContainer">
-      <div class="empty-state" id="emptyState" style="display: block;">កំពុងផ្ទុកទិន្នន័យ... ⏳</div>
-    </div>
+    <!-- Movie Grid -->
+    <div class="movie-grid" id="moviesContainer"></div>
   </div>
 
   <!-- Video Streaming Modal -->
@@ -546,140 +499,204 @@
     </div>
 
     <div class="modal-body">
-      <button class="modal-close-btn" onclick="closePlayer()">✕ បិទវីដេអូ</button>
-      <h2 id="modalTitle" style="font-size: 19px; font-weight: 700;"></h2>
+      <button class="modal-close-btn" onclick="closePlayer()">✕ បិទផ្ទាំងទស្សនា</button>
+      <h2 id="modalTitle" style="font-size: 18px; font-weight: 700;"></h2>
       <div id="modalMeta" style="color: #ff914d; font-size: 12px; margin: 4px 0 16px;"></div>
 
-      <div style="font-size: 14px; font-weight: 600;">📺 ជ្រើសរើសភាគ (Episodes)</div>
+      <div style="font-size: 13px; font-weight: 600;">📺 ជ្រើសរើសភាគ (Episodes)</div>
       <div class="episodes-grid" id="episodesContainer"></div>
 
-      <button style="width: 100%; padding: 13px; border: none; border-radius: 12px; background: linear-gradient(135deg, #ff7300, #ff3c00); color: #fff; font-weight: 600; font-size: 14px; cursor: pointer;" onclick="openChannel()">
+      <button style="width: 100%; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(135deg, #ff7300, #ff3c00); color: #fff; font-weight: 600; font-size: 13px; cursor: pointer;" onclick="openChannel()">
         📢 ចូលរួម Telegram Channel ផ្លូវការ
       </button>
     </div>
   </div>
 
-  <!-- Bottom Floating Navbar -->
+  <!-- Wallet & QR Modal -->
+  <div id="walletModal">
+    <div class="wallet-box">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-size: 16px; font-weight: 700;">💳 បញ្ចូលទឹកប្រាក់ (Top Up)</h3>
+        <button onclick="closeWallet()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="qr-container">
+        <img src="https://gtqnmfodfnsrejlpwrph.supabase.co/storage/v1/object/public/qr-code/IMG_434555.PNG" alt="Bakong KHQR" style="width: 100%; aspect-ratio: 1/1; object-fit: contain; display: block; border-radius: 8px;">
+        <div style="color: #000; font-size: 11px; font-weight: 700; margin-top: 6px;">ស្កេន KHQR ដើម្បីបញ្ចូលលុយ</div>
+      </div>
+
+      <p style="color: #aaa; font-size: 11px; margin: 12px 0 18px; line-height: 1.5;">
+        ស្កេនទូទាត់ប្រាក់តាមកម្មវិធីធនាគារណាក៏បាន។ បន្ទាប់ពីផ្ទេររួច សូមចុចប៊ូតុងខាងក្រោមដើម្បីផ្ញើស្លីបជូន Admin។
+      </p>
+
+      <button onclick="sendReceiptToAdmin()" style="width: 100%; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(135deg, #ff7300, #ff3c00); color: #fff; font-weight: 700; font-size: 13px; cursor: pointer;">
+        📤 ផ្ញើស្លីបផ្ទេរប្រាក់ទៅកាន់ Admin
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Bottom Nav -->
   <nav class="bottom-nav">
-    <button class="nav-btn active">
-      <span style="font-size: 16px;">🏠</span>
-      <span>ទំព័រដើម</span>
-    </button>
-    <button class="nav-btn">
-      <span style="font-size: 16px;">🎬</span>
-      <span>រឿង</span>
-    </button>
-    <button class="nav-btn">
-      <span style="font-size: 16px;">💳</span>
-      <span>Wallet</span>
-    </button>
-    <button class="nav-btn">
-      <span style="font-size: 16px;">👤</span>
-      <span>គណនី</span>
-    </button>
+    <button class="nav-btn active"><span>🏠</span><span>ទំព័រដើម</span></button>
+    <button class="nav-btn"><span>🎬</span><span>រឿង</span></button>
+    <button class="nav-btn" onclick="openWallet()"><span>💳</span><span>Wallet</span></button>
+    <button class="nav-btn"><span>👤</span><span>គណនី</span></button>
   </nav>
 
   <script>
-    // ១. កំណត់ Supabase Configuration
-    const SUPABASE_URL = "https://gtqnmfodfnsrejlpwrph.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0cW5tZm9kZm5zcmVqbHB3cnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNzU3MjUsImV4cCI6MjEwNTg1MTcyNX0.N0_JHGOF3SDR9UF-fehL8RATcFWQsCYaCtOJGnRSUWc";
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // ១. កំណត់ទិន្នន័យបញ្ជីរឿង (កំណត់ isVip និង price)
+    const moviesData = [
+      {
+        id: 1,
+        title: "កំពូលថាមពលចម្លែក",
+        rating: "9.1",
+        genre: "Action • Historical",
+        poster: "IMG_3834.PNG",
+        isVip: false, // 🎬 Free
+        price: 0,
+        episodes: [
+          { ep: 1, url: "https://vz-3a132f7d-c60.b-cdn.net/a203a185-73bd-4df6-ab94-231a93731de3/playlist.m3u8" },
+          { ep: 2, url: "" }
+        ]
+      },
+      {
+        id: 2,
+        title: "ដោះបណ្ដាសាស៊យ",
+        rating: "8.8",
+        genre: "Drama • Mystery",
+        poster: "IMG_3834.PNG",
+        isVip: true, // 🔒 VIP
+        price: 0.50,
+        episodes: [
+          { ep: 1, url: "https://vz-3a132f7d-c60.b-cdn.net/a203a185-73bd-4df6-ab94-231a93731de3/playlist.m3u8" }
+        ]
+      },
+      {
+        id: 3,
+        title: "ស្នេហាជ្រៅដូចសមុទ្រ",
+        rating: "8.6",
+        genre: "Romance • Drama",
+        poster: "IMG_3834.PNG",
+        isVip: true, // 🔒 VIP
+        price: 1.00,
+        episodes: [
+          { ep: 1, url: "https://vz-3a132f7d-c60.b-cdn.net/a203a185-73bd-4df6-ab94-231a93731de3/playlist.m3u8" }
+        ]
+      }
+    ];
 
-    let moviesData = [];
-    let currentMovie = null;
-    let toastTimeout = null;
+    // ២. ប្រព័ន្ធគ្រប់គ្រង Wallet និងសិទ្ធិមើលរឿង
+    let userBalance = 0.00;
+    let unlockedMovies = JSON.parse(localStorage.getItem("unlocked_movies") || "[]");
+
     const player = document.getElementById("player");
+    let currentMovie = null;
 
-    // មុខងារបង្ហាញ Popup ឈ្មោះ KHMER MOVIE HD
-    function showAppToast(message) {
-      const toast = document.getElementById("customToast");
-      const toastText = document.getElementById("toastText");
-      toastText.innerText = message;
-      toast.style.display = "block";
-
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.style.display = "none";
-      }, 2500);
-    }
-
-    // ២. Telegram WebApp Init
+    // ចាប់ផ្ដើម Telegram WebApp
     if (window.Telegram?.WebApp) {
-      const tg = window.Telegram.WebApp;
-      tg.ready();
-      tg.expand();
-
-      if (tg.initDataUnsafe?.user?.first_name) {
-        document.getElementById("user-display").innerHTML = `<span>👤</span> ${tg.initDataUnsafe.user.first_name}`;
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+      if (window.Telegram.WebApp.initDataUnsafe?.user) {
+        document.getElementById("userDisplay").innerText = "សួស្តី, " + window.Telegram.WebApp.initDataUnsafe.user.first_name;
       }
     }
 
-    // ៣. ទាញទិន្នន័យរឿងចេញពី Supabase
-    async function fetchMovies() {
-      try {
-        const { data, error } = await _supabase
-          .from('movies')
-          .select('*')
-          .order('id', { ascending: false });
-
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-          moviesData = data;
-          renderMovies(moviesData);
-
-          const first = moviesData[0];
-          document.getElementById("heroTitle").innerText = first.title;
-          document.getElementById("heroMeta").innerText = `⭐ ${first.rating || '9.0'} • ${first.genre || 'Action'}`;
-        } else {
-          document.getElementById("emptyState").innerText = "មិនទាន់មានរឿងផុសនៅឡើយទេ 😔";
-        }
-      } catch (err) {
-        console.error("Fetch Error:", err);
-        document.getElementById("emptyState").innerText = "បរាជ័យក្នុងការទាញទិន្នន័យ សូមព្យាយាមម្ដងទៀត!";
-      }
+    function updateBalanceUI() {
+      document.getElementById("balanceText").innerText = `$${userBalance.toFixed(2)}`;
     }
 
-    // ៤. បង្ហាញ Card រឿង
+    // ៣. បង្ហាញបញ្ជីរឿង (Render Movies)
     function renderMovies(list) {
       const container = document.getElementById("moviesContainer");
-      const emptyState = document.getElementById("emptyState");
       container.innerHTML = "";
 
-      if (list.length === 0) {
-        container.appendChild(emptyState);
-        emptyState.style.display = "block";
-        emptyState.innerText = "មិនមានរឿងដែលត្រូវនឹងការស្វែងរកទេ 😔";
-        return;
-      }
-
       list.forEach(m => {
+        const isUnlocked = unlockedMovies.includes(m.id);
+        let tagHtml = "";
+
+        if (!m.isVip) {
+          tagHtml = `<span class="vip-tag tag-free">FREE</span>`;
+        } else if (isUnlocked) {
+          tagHtml = `<span class="vip-tag tag-unlocked">UNLOCKED</span>`;
+        } else {
+          tagHtml = `<span class="vip-tag tag-vip">🔒 $${m.price.toFixed(2)}</span>`;
+        }
+
         const card = document.createElement("div");
         card.className = "movie-card";
-        card.onclick = () => openMovieDetail(m);
+        card.onclick = () => checkAndPlayMovie(m.id);
         card.innerHTML = `
           <div class="poster-wrap">
-            <span class="hd-badge">HD</span>
-            <img class="poster-img" src="${m.poster || 'IMG_3834.PNG'}" alt="${m.title}" onerror="this.src='IMG_3834.PNG'">
-            <span class="rating-badge">⭐ ${m.rating || '9.0'}</span>
+            ${tagHtml}
+            <img class="poster-img" src="${m.poster}" alt="${m.title}" onerror="this.src='https://placehold.co/150x220/1e1e1e/fff?text=Poster'">
+            <span class="rating-badge">⭐ ${m.rating}</span>
           </div>
           <div class="movie-info">
             <div class="movie-title">${m.title}</div>
-            <div class="movie-type">${m.genre || 'Action'}</div>
+            <div class="movie-type">${m.genre}</div>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    // ៥. ចាក់វីដេអូ Streaming (HLS)
+    // ៤. ត្រួតពិនិត្យលក្ខខណ្ឌមើល Free ឬកាត់លុយ VIP
+    function checkAndPlayMovie(id) {
+      const movie = moviesData.find(m => m.id === id);
+      if (!movie) return;
+
+      const isUnlocked = unlockedMovies.includes(movie.id);
+
+      // បើរឿង Free ឬបាន Unlock រួច -> បើកមើលភ្លាម
+      if (!movie.isVip || isUnlocked) {
+        openMovieDetail(movie);
+        return;
+      }
+
+      // បើរឿង VIP តែមិនទាន់ទិញ -> ឆែកមើលសមតុល្យ
+      if (userBalance >= movie.price) {
+        const ok = confirm(`🎬 រឿងនេះជាប្រភេទ VIP (តម្លៃ $${movie.price.toFixed(2)})។ តើអ្នកចង់កាត់សមតុល្យដើម្បីទស្សនាដែរឬទេ?`);
+        if (ok) {
+          userBalance -= movie.price;
+          unlockedMovies.push(movie.id);
+          localStorage.setItem("unlocked_movies", JSON.stringify(unlockedMovies));
+          updateBalanceUI();
+          renderMovies(moviesData);
+          alert("ការទិញបានជោគជ័យ! សូមរីករាយទស្សនា។");
+          openMovieDetail(movie);
+        }
+      } else {
+        alert(`🔒 សូមអភ័យទោស! រឿងនេះជាប្រភេទ VIP តម្លៃ $${movie.price.toFixed(2)}។ សមតុល្យរបស់អ្នកមិនគ្រប់គ្រាន់ទេ ($${userBalance.toFixed(2)})។ សូមបញ្ចូលទឹកប្រាក់ជាមុនសិន!`);
+        openWallet();
+      }
+    }
+
+    // ៥. ដំណើរការ Player និង Streaming
+    function openMovieDetail(movie) {
+      currentMovie = movie;
+      document.getElementById("modalTitle").innerText = movie.title;
+      document.getElementById("modalMeta").innerText = `⭐ ${movie.rating} • ${movie.genre}`;
+
+      const epContainer = document.getElementById("episodesContainer");
+      epContainer.innerHTML = "";
+      movie.episodes.forEach((ep, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "ep-card";
+        btn.innerText = `ភាគ ${ep.ep}`;
+        btn.onclick = () => playEpisode(idx);
+        epContainer.appendChild(btn);
+      });
+
+      document.getElementById("movie-detail").style.display = "block";
+      playEpisode(0);
+    }
+
     function playEpisode(index) {
-      if (!currentMovie || !currentMovie.episodes || !currentMovie.episodes[index]) return;
+      if (!currentMovie || !currentMovie.episodes[index]) return;
       const epData = currentMovie.episodes[index];
 
-      // បង្ហាញ Toast ឈ្មោះ KHMER MOVIE HD
       if (!epData.url) {
-        showAppToast("ភាគ " + epData.ep + " មិនទាន់មានវីដេអូទេ!");
+        alert("ភាគ " + epData.ep + " មិនទាន់មានវីដេអូទេ!");
         return;
       }
 
@@ -704,31 +721,6 @@
       }
     }
 
-    function openMovieDetail(movie) {
-      currentMovie = movie;
-      document.getElementById("modalTitle").innerText = movie.title;
-      document.getElementById("modalMeta").innerText = `⭐ ${movie.rating || '9.0'} • ${movie.genre || 'Action'}`;
-
-      const epContainer = document.getElementById("episodesContainer");
-      epContainer.innerHTML = "";
-
-      const episodes = Array.isArray(movie.episodes) ? movie.episodes : [];
-      episodes.forEach((ep, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "ep-card";
-        btn.innerText = `ភាគ ${ep.ep}`;
-        btn.onclick = () => playEpisode(idx);
-        epContainer.appendChild(btn);
-      });
-
-      document.getElementById("movie-detail").style.display = "block";
-      if (episodes.length > 0) playEpisode(0);
-    }
-
-    function playFirstMovie() {
-      if (moviesData.length > 0) openMovieDetail(moviesData[0]);
-    }
-
     function closePlayer() {
       if (window.hlsPlayer) {
         window.hlsPlayer.destroy();
@@ -739,12 +731,30 @@
       document.getElementById("movie-detail").style.display = "none";
     }
 
-    // ៦. Filter ស្វែងរក
-    document.getElementById("searchInput").addEventListener("input", function() {
-      const val = this.value.toLowerCase().trim();
-      const filtered = moviesData.filter(m => m.title.toLowerCase().includes(val));
-      renderMovies(filtered);
-    });
+    // ៦. Modal Wallet & បាញ់លុយ
+    function openWallet() {
+      document.getElementById("walletModal").style.display = "block";
+    }
+
+    function closeWallet() {
+      document.getElementById("walletModal").style.display = "none";
+    }
+
+    function sendReceiptToAdmin() {
+      let userId = "មិនស្គាល់";
+      if (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) {
+        userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+      }
+      const adminUsername = "khmermoviehd88"; 
+      const message = encodeURIComponent(`សួស្តី Admin ខ្ញុំបានផ្ទេរប្រាក់បញ្ចូល Wallet រួចរាល់ហើយ!\nTelegram ID របស់ខ្ញុំគឺ: ${userId}`);
+      const link = `https://t.me/${adminUsername}?text=${message}`;
+
+      if (window.Telegram?.WebApp?.openTelegramLink) {
+        window.Telegram.WebApp.openTelegramLink(link);
+      } else {
+        window.open(link, "_blank");
+      }
+    }
 
     function openChannel() {
       const link = "https://t.me/khmermoviehd88";
@@ -755,8 +765,16 @@
       }
     }
 
-    // ចាប់ផ្ដើម
-    fetchMovies();
+    // Search Engine
+    document.getElementById("searchInput").addEventListener("input", function() {
+      const val = this.value.toLowerCase().trim();
+      const filtered = moviesData.filter(m => m.title.toLowerCase().includes(val));
+      renderMovies(filtered);
+    });
+
+    // បើកបង្ហាញទិន្នន័យ
+    updateBalanceUI();
+    renderMovies(moviesData);
   </script>
 </body>
 </html>

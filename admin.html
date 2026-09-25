@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - បញ្ចូលរឿងថ្មី</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0e0e11; color: #fff; padding: 20px; max-width: 520px; margin: auto; }
+    h2 { margin-bottom: 20px; color: #ff5e00; }
+    label { font-size: 13px; color: #a0a0a5; margin-top: 14px; display: block; }
+    input { width: 100%; padding: 12px; margin-top: 6px; border-radius: 10px; border: 1px solid #2a2a32; background: #18181f; color: #fff; box-sizing: border-box; font-size: 14px; }
+    input:focus { border-color: #ff5e00; outline: none; }
+    button { width: 100%; margin-top: 24px; padding: 14px; background: linear-gradient(135deg, #ff7300, #ff3c00); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <h2>🎬 បញ្ចូលរឿងថ្មី (Admin Panel)</h2>
+
+  <label>ឈ្មោះរឿង *</label>
+  <input type="text" id="title" placeholder="ឧ. កំពូលថាមពលចម្លែក">
+
+  <label>ពិន្ទុ (Rating)</label>
+  <input type="text" id="rating" value="9.1">
+
+  <label>ប្រភេទរឿង (Genre)</label>
+  <input type="text" id="genre" placeholder="ឧ. Action • Historical">
+
+  <label>Link រូបភាព Poster (URL)</label>
+  <input type="text" id="poster" placeholder="https://.../poster.jpg">
+
+  <label>Link វីដេអូភាគ ១ (.m3u8) *</label>
+  <input type="text" id="ep1" placeholder="https://.../ep1/playlist.m3u8">
+
+  <label>Link វីដេអូភាគ ២ (បើមាន)</label>
+  <input type="text" id="ep2" placeholder="https://.../ep2/playlist.m3u8">
+
+  <label>Link វីដេអូភាគ ៣ (បើមាន)</label>
+  <input type="text" id="ep3" placeholder="https://.../ep3/playlist.m3u8">
+
+  <button onclick="uploadMovie()">🚀 ផុសរឿងចូល App ភ្លាមៗ</button>
+
+  <script>
+    const SUPABASE_URL = "https://gtqnmfodfnsrejlpwrph.supabase.co";
+    // ដាក់ Key ពេញលេញដែលបាន copy ពី supabase publishable key នៅត្រង់នេះ
+    const SUPABASE_KEY = "ដាក់_PUBLISHABLE_KEY_នៅទីនេះ"; 
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function uploadMovie() {
+      const title = document.getElementById("title").value.trim();
+      const rating = document.getElementById("rating").value.trim() || "9.0";
+      const genre = document.getElementById("genre").value.trim() || "Action";
+      const poster = document.getElementById("poster").value.trim();
+      const ep1 = document.getElementById("ep1").value.trim();
+      const ep2 = document.getElementById("ep2").value.trim();
+      const ep3 = document.getElementById("ep3").value.trim();
+
+      if (!title || !ep1) {
+        alert("សូមបំពេញឈ្មោះរឿង និង Link ភាគ ១ ជាមុនសិន!");
+        return;
+      }
+
+      const episodes = [{ ep: 1, url: ep1 }];
+      if (ep2) episodes.push({ ep: 2, url: ep2 });
+      if (ep3) episodes.push({ ep: 3, url: ep3 });
+
+      const { data, error } = await _supabase
+        .from('movies')
+        .insert([{ title, rating, genre, poster, episodes }]);
+
+      if (error) {
+        alert("មានបញ្ហាមិនអាចផុសបាន៖ " + error.message);
+      } else {
+        alert("🎉 ផុសរឿងបានជោគជ័យហើយ!");
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

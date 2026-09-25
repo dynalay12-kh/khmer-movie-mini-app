@@ -44,6 +44,7 @@
       height: 42px;
       border-radius: 10px;
       object-fit: cover;
+      box-shadow: 0 0 10px rgba(255, 165, 0, 0.2);
     }
     .app-title h1 {
       font-size: 15px;
@@ -325,7 +326,8 @@
   <!-- Header -->
   <div class="header">
     <div class="header-left">
-      <img src="https://i.ibb.co/N2mXtZ3Y/Chat-GPT-Image-Sep-25-2026-11-08-29-AM.png" class="app-icon" alt="Logo">
+      <!-- Logo មាស 3D -->
+      <img src="https://i.ibb.co/vzR0XwB/logo.png" onerror="this.src='https://placehold.co/100x100?text=LOGO'" class="app-icon" alt="Logo">
       <div class="app-title">
         <h1>KHMER MOVIE <span>HD</span></h1>
         <p>សួស្ដី, Khmer</p>
@@ -412,6 +414,7 @@
 
         if (error) {
           console.error("Supabase Error:", error);
+          document.getElementById('moviesContainer').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ff4d4f; padding: 20px;">មិនអាចទាញទិន្នន័យបាន (សូមពិនិត្យមើល RLS លើ Supabase)</p>`;
           return;
         }
 
@@ -419,10 +422,11 @@
           allMovies = data;
           renderMovies(allMovies);
         } else {
-          document.getElementById('moviesContainer').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777;">មិនទាន់មានរឿងនៅឡើយទេ</p>`;
+          document.getElementById('moviesContainer').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 20px;">មិនទាន់មានរឿងនៅក្នុងប្រព័ន្ធនៅឡើយទេ</p>`;
         }
       } catch (e) {
         console.error("Fetch Exception:", e);
+        document.getElementById('moviesContainer').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #ff4d4f; padding: 20px;">មានបញ្ហាក្នុងការតភ្ជាប់</p>`;
       }
     }
 
@@ -435,6 +439,7 @@
         const posterUrl = movie.poster || "https://placehold.co/300x450?text=No+Poster";
         const rating = movie.rating || "9.0";
         const genre = movie.genre || "Drama";
+        const access = (movie.access || "free").toUpperCase();
 
         const card = document.createElement('div');
         card.className = "movie-card";
@@ -443,7 +448,7 @@
         card.innerHTML = `
           <div class="poster-wrapper">
             <img src="${posterUrl}" class="poster-img" alt="${movie.title}" onerror="this.src='https://placehold.co/300x450?text=Poster'">
-            <span class="badge-tag badge-free">FREE</span>
+            <span class="badge-tag ${access === 'VIP' ? 'badge-vip' : 'badge-free'}">${access}</span>
           </div>
           <div class="movie-info">
             <div class="movie-rating">★ ${rating}</div>
@@ -462,19 +467,32 @@
       const epContainer = document.getElementById('episodesList');
       epContainer.innerHTML = "";
 
-      const episodes = Array.isArray(movie.episodes) ? movie.episodes : [];
+      let episodes = [];
+      if (typeof movie.episodes === 'string') {
+        try {
+          episodes = JSON.parse(movie.episodes);
+        } catch(e) {
+          episodes = [];
+        }
+      } else if (Array.isArray(movie.episodes)) {
+        episodes = movie.episodes;
+      }
 
-      episodes.forEach((episode, index) => {
-        const btn = document.createElement('button');
-        btn.className = `ep-btn ${index === 0 ? 'active' : ''}`;
-        btn.innerText = `ភាគ ${episode.ep || (index + 1)}`;
-        btn.onclick = () => {
-          document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          playStream(episode.url);
-        };
-        epContainer.appendChild(btn);
-      });
+      if (episodes.length === 0) {
+        epContainer.innerHTML = `<p style="grid-column: 1/-1; color: #777;">មិនទាន់មានភាគវីដេអូ</p>`;
+      } else {
+        episodes.forEach((episode, index) => {
+          const btn = document.createElement('button');
+          btn.className = `ep-btn ${index === 0 ? 'active' : ''}`;
+          btn.innerText = `ភាគ ${episode.ep || (index + 1)}`;
+          btn.onclick = () => {
+            document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            playStream(episode.url);
+          };
+          epContainer.appendChild(btn);
+        });
+      }
 
       modal.style.display = "flex";
 
@@ -530,6 +548,9 @@
 
       if (genre === 'ទាំងអស់') {
         renderMovies(allMovies);
+      } else if (genre === 'ពេញនិយម') {
+        const filtered = allMovies.filter(m => parseFloat(m.rating || 0) >= 9.0);
+        renderMovies(filtered);
       } else {
         const filtered = allMovies.filter(m => m.genre && m.genre.toLowerCase().includes(genre.toLowerCase()));
         renderMovies(filtered);
